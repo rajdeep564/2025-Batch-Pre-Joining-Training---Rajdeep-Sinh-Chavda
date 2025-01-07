@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80vw;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #66afe9;
+            box-shadow: 0 0 8px rgba(102, 175, 233, 0.6);
+        }
+
+        input[type="password"] {
+            font-family: "Courier New", monospace;
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        input:invalid {
+            border-color: red;
+        }
+
+        input:valid {
+            border-color: green;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #66afe9;
+        }
+
+        button {
+            width: 10%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .note {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form>
+        <label for="first-name">First Name:</label>
+        <input id="first-name" type="text" required placeholder="Enter First Name">
+        
+        <label for="last-name">Last Name:</label>
+        <input id="last-name" type="text" required placeholder="Enter Last Name">
+        
+        <label for="email">Email:</label>
+        <input id="email" type="email" required placeholder="Enter Email">
+        
+        <label for="linkedin">Linkedin Profile Link:</label>
+        <input id="linkedin" type="url" required placeholder="Enter Linkedin Profile Link">
+        
+        <label for="number">Number between 10 & 20:</label>
+        <input id="number" type="number" min="10" max="20" required placeholder="Enter Number between 10 & 20">
+        
+        <label for="password">Password (Min Length 5, 1 Number, 1 Uppercase, 1 Lowercase):</label>
+        <input id="password" type="password" required placeholder="Enter Password"
+               pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{5,}"
+               title="Password must contain at least one digit, one lowercase letter, one uppercase letter, and be at least 5 characters long.">
+        
+        <button type="submit">Submit</button>
+        
+        <p class="note">Note: Please fill all the fields correctly.</p>
+    </form>
+</div>
+
+</body>
+</html>

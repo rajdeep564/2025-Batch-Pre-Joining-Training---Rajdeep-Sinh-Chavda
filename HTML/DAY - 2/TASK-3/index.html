@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Design</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            background-color: #a6d6e3;
+            font-family: Arial, sans-serif;
+        }
+
+        .calculator {
+            margin-top: 10px;
+            background-color: white;
+            width: 900px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .display {
+            background-color: #333;
+            color: white;
+            text-align: right;
+            padding: 20px;
+            font-size: 2rem;
+        }
+
+        table {
+            width: 101%;
+            height: 100%;
+            border-collapse: collapse;
+            
+        }
+
+        td {
+            border: 0;
+            margin: 0;
+            padding: 0;
+            
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.5rem;
+            border: 1px solid #ddd;
+            background-color: #f8f8f8;
+            cursor: pointer;
+            outline: none;
+        }
+
+        button:hover {
+            background-color: #e0e0e0;
+        }
+
+        button.orange {
+            background-color: #f77f49;
+            color: white;
+        }
+
+        button.orange:hover {
+            background-color: #f66128;
+        }
+
+        .equal{
+            background-color: #f77f49;
+             color: white;
+              padding: 20px;
+               border: 1px solid #ddd;
+                cursor: pointer;
+                outline: none;
+
+        }
+
+        .equal:hover{
+            background-color: #f66128;
+        }
+        .color{
+            cursor: pointer;
+            background-color: rgb(214, 214, 214);
+            color:#333;
+        }
+
+        .color:hover{
+            background-color: #e0e0e0;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">
+            <span>0</span>
+        </div>
+        <table class="buttons">
+            <tr  >
+                <td style="width: 25%;"><button class="color">+</button></td>
+                <td style="width: 25%;"><button class="color" >-</button></td>
+                <td style="width: 25%;"><button class="color">x</button></td>
+                <td style="width: 25%;" class=" color">/</td>
+            </tr>
+            <tr >
+                <td><button>7</button></td>
+                <td><button>8</button></td>
+                <td><button>9</button></td>
+                <td class="equal" rowspan="4">=</td>
+            </tr>
+            <tr colspan="4">
+                <td><button>4</button></td>
+                <td><button>5</button></td>
+                <td><button>6</button></td>
+                <td></td>
+            </tr>
+            <tr colspan="4">
+                <td><button>1</button></td>
+                <td><button>2</button></td>
+                <td><button>3</button></td>
+                <td></td>
+            </tr>
+            <tr colspan="4">
+                <td><button>0</button></td>
+                <td><button>.</button></td>
+                <td><button>AC</button></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
