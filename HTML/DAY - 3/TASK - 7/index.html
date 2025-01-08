@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Editor</title>
+  <!-- Add Font Awesome CDN for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f9fc;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 700px;
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #2C3E50;
+    }
+
+    .toolbar {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .toolbar button {
+      padding: 8px 15px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
+    }
+
+    .toolbar button:hover {
+      background-color: #2980b9;
+    }
+
+    .editor {
+      min-height: 150px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 15px;
+      resize: vertical;
+      font-size: 16px;
+      color: #34495e;
+      background-color: #ecf0f1;
+      transition: background-color 0.3s ease;
+    }
+
+    .editor:focus {
+      background-color: #fff;
+      border-color: #3498db;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 30px;
+      color: #3498db;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #2980b9;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .btns{
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      justify-content: flex-end;
+    }
+
+  </style>
+</head>
+<body>
+
+<button onclick="openModal()">Open Editor</button>
+
+<div class="modal" id="myModal">
+  <span class="close" onclick="closeModal()">&times;</span>
+  <h2 class="modal-title">Modal Tittle</h2>
+
+  <div class="toolbar">
+    <!-- Align Left (Font Awesome Icon) -->
+    <button onclick="alignLeft()"><i class="fas fa-align-left"></i></button>
+    <!-- Align Center (Font Awesome Icon) -->
+    <button onclick="alignCenter()"><i class="fas fa-align-center"></i></button>
+    <!-- Align Right (Font Awesome Icon) -->
+    <button onclick="alignRight()"><i class="fas fa-align-right"></i></button>
+    <!-- Justify (Font Awesome Icon) -->
+    <button onclick="justifyText()"><i class="fas fa-align-justify"></i></button>
+    <!-- Add Bookmark (Font Awesome Icon) -->
+    <button onclick="addBookmark()"><i class="fas fa-bookmark"></i></button>
+    <!-- Add Hyperlink (Font Awesome Icon) -->
+    <button onclick="addHyperlink()"><i class="fas fa-link"></i></button>
+  </div>
+
+  <div class="editor" contenteditable="true" id="editor"></div>
+  <div class="btns">
+    <button onclick="closeModal()">Close</button>
+    <button onclick="saveChanges()">Save Changes</button>
+  </div>
+
+ 
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById("myModal").style.display = "block";
+  }
+
+  function closeModal() {
+    document.getElementById("myModal").style.display = "none";
+  }
+
+  function alignLeft() {
+    document.getElementById("editor").style.textAlign = "left";
+  }
+
+  function alignCenter() {
+    document.getElementById("editor").style.textAlign = "center";
+  }
+
+  function alignRight() {
+    document.getElementById("editor").style.textAlign = "right";
+  }
+
+  function justifyText() {
+    document.getElementById("editor").style.textAlign = "justify";
+  }
+
+  function addBookmark() {
+    // Implement bookmark functionality here
+    alert("Bookmark added");
+  }
+
+  function addHyperlink() {
+    const selectedText = window.getSelection().toString();
+    if (selectedText) {
+      const url = prompt("Enter URL:");
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.textContent = selectedText;
+      document.execCommand('insertHTML', false, anchor.outerHTML);
+    }
+  }
+
+  function saveChanges() {
+    // Implement save logic here
+    alert("Changes saved");
+  }
+</script>
+
+</body>
+</html>

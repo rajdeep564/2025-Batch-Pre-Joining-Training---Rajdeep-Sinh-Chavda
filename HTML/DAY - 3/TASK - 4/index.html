@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Type Detection</title>
+  <style>
+    /* Basic CSS styling */
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    
+    }
+    .container {
+        border: 1px solid black;
+        width: 600px;
+        margin: 10px;
+    }
+
+    .container h1{
+        text-align: center;
+    }
+
+    .inner{
+        padding: 5px;
+    }
+
+    button:disabled {
+        cursor: not-allowed;
+    }
+
+    .outer{
+        border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+
+<div class="outer">
+  <div class="container">
+    <h1>Alows Only If Image</h1>
+    <hr>
+    <div class="inner">
+
+        <label for="fileInput">Select File:</label>
+        <input type="file" id="fileInput" onchange="checkIfImage()" accept="image/*">
+        <br>
+        <button id="uploadButton" onclick="displayFileType()" disabled>Upload</button>
+        <p id="type"></p> <!-- Displays if file is an image or not -->
+        <p id="result"></p> <!-- Displays file extension after uploading -->
+
+    </div>
+  </div>
+</div>
+
+  <script>
+    // Function to check if the file is an image and update the type paragraph
+    function checkIfImage() {
+      const fileInput = document.getElementById('fileInput');
+      console.log(fileInput.files);
+
+      const file = fileInput.files[0];
+      console.log(file);
+      const type = document.getElementById('type');
+      const uploadButton = document.getElementById('uploadButton');
+
+      // Enable the upload button if a file is selected
+      if (file) {
+        uploadButton.disabled = false;
+
+        // Check if the file is an image
+        if (file.type.startsWith('image')) {
+          type.textContent = "The file is an image.";
+        } else {
+          type.textContent = "The file is NOT an image.";
+        }
+      } else {
+        // Clear type message if no file is selected
+        type.textContent = "";
+        uploadButton.disabled = true;
+      }
+    }
+
+    // Function to display the file extension when the upload button is clicked
+    function displayFileType() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      const result = document.getElementById('result');
+
+      if (file) {
+        // Get the file extension from the file name
+        console.log(file.type)
+        const fileName = file.name;
+        const fileExtension = fileName.split('.').pop(); // Split by '.' and take the last part
+
+        // Display the file extension in the result paragraph
+        result.textContent = `File type: .${fileExtension}`;
+      } else {
+        result.textContent = "No file selected.";
+      }
+    }
+  </script>
+
+</body>
+</html>

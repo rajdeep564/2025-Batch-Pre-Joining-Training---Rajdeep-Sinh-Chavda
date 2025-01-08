@@ -13,6 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            flex-direction: column;
         }
 
         .container {
@@ -39,13 +40,14 @@
             padding: 10px;
             font-size: 1rem;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
+            border: 1px solid #ccc; 
             border-radius: 5px;
             outline: none;
+            transition: border-color 0.3s ease;
         }
 
         input:focus {
-            border-color: #66afe9;
+            border-color: #66afe9; 
             box-shadow: 0 0 8px rgba(102, 175, 233, 0.6);
         }
 
@@ -57,7 +59,7 @@
             color: #aaa;
         }
 
-        input:invalid {
+        input:invalid:not(:focus):not(:placeholder-shown) {
             border-color: red;
         }
 
@@ -65,12 +67,8 @@
             border-color: green;
         }
 
-        input[type="text"]:focus, input[type="password"]:focus {
-            border-color: #66afe9;
-        }
-
-        button {
-            width: 10%;
+        .btn {
+            width: 100%;
             padding: 10px;
             background-color: #4CAF50;
             color: white;
@@ -81,7 +79,7 @@
             margin-top: 10px;
         }
 
-        button:hover {
+        .btn:hover {
             background-color: #45a049;
         }
 
@@ -97,16 +95,24 @@
 <div class="container">
     <form>
         <label for="first-name">First Name:</label>
-        <input id="first-name" type="text" required placeholder="Enter First Name">
+        <input id="first-name" type="text" required placeholder="Enter First Name"
+               pattern="^[A-Za-z]+$"
+               title="First Name should only contain letters.">
         
         <label for="last-name">Last Name:</label>
-        <input id="last-name" type="text" required placeholder="Enter Last Name">
+        <input id="last-name" type="text" required placeholder="Enter Last Name"
+               pattern="^[A-Za-z]+$"
+               title="Last Name should only contain letters.">
         
         <label for="email">Email:</label>
-        <input id="email" type="email" required placeholder="Enter Email">
+        <input id="email" type="email" required placeholder="Enter Email"
+               pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+               title="Enter a valid email address (e.g., user@example.com).">
         
-        <label for="linkedin">Linkedin Profile Link:</label>
-        <input id="linkedin" type="url" required placeholder="Enter Linkedin Profile Link">
+        <label for="linkedin">LinkedIn Profile Link:</label>
+        <input id="linkedin" type="url" required placeholder="Enter LinkedIn Profile Link"
+               pattern="^(https?://)?(www\.)?linkedin\.com/.*$"
+               title="Enter a valid LinkedIn profile URL.">
         
         <label for="number">Number between 10 & 20:</label>
         <input id="number" type="number" min="10" max="20" required placeholder="Enter Number between 10 & 20">
@@ -116,11 +122,14 @@
                pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{5,}"
                title="Password must contain at least one digit, one lowercase letter, one uppercase letter, and be at least 5 characters long.">
         
-        <button type="submit">Submit</button>
+        <button class="btn" type="submit">Submit</button>
         
         <p class="note">Note: Please fill all the fields correctly.</p>
     </form>
 </div>
+
+<a href="../TASK-3/index.html"><button>Task 3</button></a>
+<a href="../TASK - 4/Index.html"><button>Task 4</button></a>
 
 </body>
 </html>

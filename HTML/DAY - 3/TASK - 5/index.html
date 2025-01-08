@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Two Submit Buttons with Different Actions</title>
+</head>
+<body>
+
+  <h1>Two Submit Buttons with Different Action</h1>
+
+  <form>
+    <label for="firstname">Firstname:</label>
+    <input type="text" id="firstname" name="firstname"><br><br>
+
+    <button type="button" onclick="submit1('Submit1')">Submit1</button>
+    <button type="button" onclick="submit2('Submit2')">Submit2</button>
+
+    <br><br>
+
+    <table>
+      <tr>
+        <th>Firstname</th>
+        <th>Submitted Via</th>
+      </tr>
+      <tbody id="tableBody"></tbody> <!-- Add table body here to append rows -->
+    </table>
+  </form>
+
+  <script>
+    // Function to handle submit for Submit1 button
+    function submit1(buttonName) {
+      const firstname = document.getElementById("firstname").value;
+      
+      if (firstname) {  // Only proceed if there is a name entered
+        const tableBody = document.getElementById("tableBody");
+        const newRow = tableBody.insertRow();  // Insert a new row
+        const cell1 = newRow.insertCell(0);  // Insert cell for the name
+        const cell2 = newRow.insertCell(1);  // Insert cell for the button name
+        
+        cell1.textContent = firstname;  // Set the name in cell1
+        cell2.textContent = buttonName;  // Set the button name in cell2
+        
+        // Clear the input field after submission
+        document.getElementById("firstname").value = '';
+      } else {
+        alert("Please enter a name.");
+      }
+    }
+
+    // Function to handle submit for Submit2 button
+    function submit2(buttonName) {
+      const firstname = document.getElementById("firstname").value;
+      
+      if (firstname) {  // Only proceed if there is a name entered
+        const tableBody = document.getElementById("tableBody");
+        const newRow = tableBody.insertRow();  // Insert a new row
+        const cell1 = newRow.insertCell(0);  // Insert cell for the name
+        const cell2 = newRow.insertCell(1);  // Insert cell for the button name
+        
+        cell1.textContent = firstname;  // Set the name in cell1
+        cell2.textContent = buttonName;  // Set the button name in cell2
+        
+        // Clear the input field after submission
+        document.getElementById("firstname").value = '';
+      } else {
+        alert("Please enter a name.");
+      }
+    }
+  </script>
+
+</body>
+</html>
