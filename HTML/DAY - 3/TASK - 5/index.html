@@ -3,9 +3,29 @@
 <head>
   <title>Two Submit Buttons with Different Actions</title>
 </head>
+<style>
+  body{
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ak{
+    display: flex;
+    gap: 150px;
+  }
+  td,th,table{
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+</style>
 <body>
 
   <h1>Two Submit Buttons with Different Action</h1>
+  <div class="ak">
 
   <form>
     <label for="firstname">Firstname:</label>
@@ -15,57 +35,56 @@
     <button type="button" onclick="submit2('Submit2')">Submit2</button>
 
     <br><br>
+  </form>
 
     <table>
       <tr>
         <th>Firstname</th>
         <th>Submitted Via</th>
       </tr>
-      <tbody id="tableBody"></tbody> <!-- Add table body here to append rows -->
+      <tbody id="tableBody"></tbody>
     </table>
-  </form>
+
+  </div>
 
   <script>
-    // Function to handle submit for Submit1 button
     function submit1(buttonName) {
       const firstname = document.getElementById("firstname").value;
       
-      if (firstname) {  // Only proceed if there is a name entered
+      if (firstname) {
         const tableBody = document.getElementById("tableBody");
-        const newRow = tableBody.insertRow();  // Insert a new row
-        const cell1 = newRow.insertCell(0);  // Insert cell for the name
-        const cell2 = newRow.insertCell(1);  // Insert cell for the button name
+        const newRow = tableBody.insertRow();
+        const cell1 = newRow.insertCell(0);
+        const cell2 = newRow.insertCell(1);
         
-        cell1.textContent = firstname;  // Set the name in cell1
-        cell2.textContent = buttonName;  // Set the button name in cell2
+        cell1.textContent = firstname;
+        cell2.textContent = buttonName;
         
-        // Clear the input field after submission
         document.getElementById("firstname").value = '';
       } else {
         alert("Please enter a name.");
       }
     }
 
-    // Function to handle submit for Submit2 button
     function submit2(buttonName) {
       const firstname = document.getElementById("firstname").value;
       
-      if (firstname) {  // Only proceed if there is a name entered
+      if (firstname) {
         const tableBody = document.getElementById("tableBody");
-        const newRow = tableBody.insertRow();  // Insert a new row
-        const cell1 = newRow.insertCell(0);  // Insert cell for the name
-        const cell2 = newRow.insertCell(1);  // Insert cell for the button name
+        const newRow = tableBody.insertRow();
+        const cell1 = newRow.insertCell(0);
+        const cell2 = newRow.insertCell(1);
         
-        cell1.textContent = firstname;  // Set the name in cell1
-        cell2.textContent = buttonName;  // Set the button name in cell2
+        cell1.textContent = firstname;
+        cell2.textContent = buttonName;
         
-        // Clear the input field after submission
         document.getElementById("firstname").value = '';
       } else {
         alert("Please enter a name.");
       }
     }
   </script>
+  <a href="../TASK - 6/index.html"><button>next</button></a>
 
 </body>
 </html>
