@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Editor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<button onclick="openModal()">Open Editor</button>
+
+<div class="modal" id="myModal">
+  <span class="close" onclick="closeModal()">&times;</span>
+  <h2 class="modal-title">Modal Tittle</h2>
+
+  <div class="toolbar">
+    <button onclick="alignLeft()"><i class="fas fa-align-left"></i></button>
+    <button onclick="alignCenter()"><i class="fas fa-align-center"></i></button>
+    <button onclick="alignRight()"><i class="fas fa-align-right"></i></button>
+    <button onclick="justifyText()"><i class="fas fa-align-justify"></i></button>
+    <button onclick="addBookmark()"><i class="fas fa-bookmark"></i></button>
+    <button onclick="addHyperlink()"><i class="fas fa-link"></i></button>
+  </div>
+
+  <div class="editor" contenteditable="true" id="editor"></div>
+  <div class="btns">
+    <button onclick="closeModal()">Close</button>
+    <button onclick="saveChanges()">Save Changes</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

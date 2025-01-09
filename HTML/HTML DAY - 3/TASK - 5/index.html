@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Two Submit Buttons with Different Actions</title>
+</head>
+<link rel="stylesheet" href="style.css">
+
+<body>
+
+  <h1>Two Submit Buttons with Different Action</h1>
+  <div class="ak">
+
+  <form>
+    <label for="firstname">Firstname:</label>
+    <input type="text" id="firstname" name="firstname"><br><br>
+
+    <button type="button" onclick="submit1('Submit1')">Submit1</button>
+    <button type="button" onclick="submit2('Submit2')">Submit2</button>
+
+    <br><br>
+  </form>
+
+    <table>
+      <tr>
+        <th>Firstname</th>
+        <th>Submitted Via</th>
+      </tr>
+      <tbody id="tableBody"></tbody>
+    </table>
+
+  </div>
+
+  
+  <a href="../TASK - 6/index.html"><button>next</button></a>
+
+</body>
+<script src="script.js"></script>
+</html>

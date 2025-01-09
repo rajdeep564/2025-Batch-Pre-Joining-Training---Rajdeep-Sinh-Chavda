@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Type Detection</title>
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+
+<div class="outer">
+  <div class="container">
+    <h1>Alows Only If Image</h1>
+    <hr>
+    <div class="inner">
+        <label for="fileInput">Select File:</label>
+        <input type="file" id="fileInput" onchange="checkIfImage()" accept="image/*">
+        <br>
+        <button id="uploadButton" onclick="displayFileType()" disabled>Upload</button>
+        <p id="type"></p>
+        <p id="result"></p>
+    </div>
+  </div>
+</div>
+<a href="../TASK - 5/index.html"><button>next</button></a>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

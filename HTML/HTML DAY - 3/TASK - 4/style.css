@@ -1,0 +1,28 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+.container {
+    border: 1px solid black;
+    width: 600px;
+    margin: 10px;
+}
+
+.container h1{
+    text-align: center;
+}
+
+.inner{
+    padding: 5px;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+.outer{
+    border: 1px solid black;
+}
