@@ -24,19 +24,19 @@
     </nav>
     <div class="main">
         <div class="sidebar">
-            <a href="">
+            <a href="../Customer/index.html">
                 <button class="btn_s">
                         Customer
                 </button>
             </a>
 
-            <a href="">
+            <a href="../Invoice/index.html">
                 <button class="btn_s">
                         Invoice
                 </button>
             </a>
 
-            <a href="">
+            <a href="../Report/index.html">
                 <button class="btn_s">
                         Reports
                 </button>
@@ -57,16 +57,24 @@
                         </button>
                     </div>
 
-                    <div class="dropdown">
-                        <button class="dropdown-button">
-                            <span>Status</span>
-                            <i class="arrow-down"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown-item" onclick="setStatus('Active')">Active</li>
-                            <li class="dropdown-item" onclick="setStatus('Inactive')">Inactive</li>
-                        </ul>
+                    <div class="dott">
+
+                        <div class="dropdown">
+                            <button class="dropdown-button">
+                                
+                                <span>Active</span>
+                                <i class="arrow-down"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item" onclick="setStatus('Active')">Active</li>
+                                <li class="dropdown-item" onclick="setStatus('Inactive')">Inactive</li>
+                            </ul>
+                        </div>
+                        <span class="status-indicator"></span>
+
                     </div>
+
+                    
 
                     <button class="btn_cust" onclick="openPopup()">
                         Add Customer
@@ -79,29 +87,67 @@
                             <form>
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input type="text" id="name" placeholder="Enter name">
+                                    <input 
+                                        type="text" 
+                                        id="name" 
+                                        placeholder="Enter name" 
+                                        required 
+                                        pattern="[A-Za-z\s]{2,50}" 
+                                        title="Name should only contain letters and spaces, and be 2 to 50 characters long.">
                                 </div>
                                 <div class="form-group">
                                     <label for="company">Company Name</label>
-                                    <input type="text" id="company" placeholder="Enter company name">
+                                    <input 
+                                        type="text" 
+                                        id="company" 
+                                        placeholder="Enter company name" 
+                                        required 
+                                        pattern="[A-Za-z0-9\s]{2,100}" 
+                                        title="Company name can contain letters, numbers, and spaces, and be 2 to 100 characters long.">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" id="email" placeholder="Enter email">
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        placeholder="Enter email" 
+                                        required 
+                                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                                        title="Please enter a valid email address.">
                                 </div>
                                 <div class="form-group">
                                     <label for="mobile">Mobile Number</label>
-                                    <input type="text" id="mobile" placeholder="Enter mobile number">
+                                    <input 
+                                        type="tel" 
+                                        id="mobile" 
+                                        placeholder="Enter mobile number" 
+                                        required 
+                                        title="Mobile number should be exactly 10 digits.">
                                 </div>
                                 <div class="form-group">
                                     <label for="address">Address</label>
-                                    <textarea id="address" rows="3" placeholder="Enter address"></textarea>
+                                    <textarea 
+                                        id="address" 
+                                        rows="3" 
+                                        placeholder="Enter address" 
+                                        required 
+                                        pattern=".{10,200}" 
+                                        title="Address should be 10 to 200 characters long."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select class="slt" id="status" required>
+                                        <option value="" disabled selected>Select status</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="cancel-btn" onclick="closePopup()">Cancel</button>
                                     <button type="submit" class="save-btn">Save</button>
                                 </div>
                             </form>
+                            
                         </div>
                     </div>
 
@@ -126,12 +172,7 @@
                     </table>
                     <div class="pagination">
                         <button type="button" class="prev">Prev</button>
-                        <button type="button" class="btn">1</button>
-                        <button type="button" class="btn">2</button>
-                        <button type="button" class="btn">3</button>
-                        <button type="button" class="btn">4</button>
-                        <button type="button" class="btn">5</button>
-                        <button type="button" class="btn">6</button>
+                        <span id="currentPage" class="page-number">1</span>
                         <button type="button" class="next">Next</button>
                     </div>
                 </div>

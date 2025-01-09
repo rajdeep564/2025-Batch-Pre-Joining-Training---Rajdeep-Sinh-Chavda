@@ -187,8 +187,8 @@ body{
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    margin-right: 8px; /* Space between the dot and the text */
-    background-color: green; /* Default to green (Active) */
+    margin-right: 8px; 
+    background-color: green; 
 }
 
 .dropdown-menu li{
@@ -299,7 +299,7 @@ table-container {
   
   th,
   td {
-    border: 2px solid rgb(205, 205, 205);
+    border: 1px solid rgb(0, 0, 0);
     padding: 10px;
     text-align: center;
   }
@@ -331,7 +331,7 @@ table-container {
 
   /* Popup container */
 .popup {
-    display: none; 
+    display: none; /* Initially hidden */
     position: fixed;
     top: 0;
     left: 0;
@@ -340,7 +340,7 @@ table-container {
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    transform: translate(36%, 17%);
+    transform: translate(36%, 3%);
 }
 
 /* Popup content */
@@ -422,3 +422,43 @@ table-container {
         justify-content: space-around;
         gap: 15px;
 }
+
+table{
+    line-height: 0px;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+th{
+    font-weight: bolder;
+}
+
+.report-h{
+    padding: inherit;
+}
+
+.btn_aud {
+    background-color: lightblue; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 20px; 
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  }
+
+  .btn_aud:hover {
+    background-color: #3498db; 
+  }
+
+  .rpclass{
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 8vh;
+
+  }

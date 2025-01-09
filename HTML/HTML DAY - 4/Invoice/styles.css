@@ -187,8 +187,8 @@ body{
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    margin-right: 8px; /* Space between the dot and the text */
-    background-color: green; /* Default to green (Active) */
+    margin-right: 8px; 
+    background-color: green; 
 }
 
 .dropdown-menu li{
@@ -236,7 +236,7 @@ body{
 
 .btn_cust:active {
     background-color: #68ccf7; 
-    box-shadow: none; 
+    box-shadow: none;
 }
 
 .btn_cust:focus {
@@ -340,7 +340,7 @@ table-container {
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    transform: translate(36%, 17%);
+    transform: translate(36%, 3%);
 }
 
 /* Popup content */
