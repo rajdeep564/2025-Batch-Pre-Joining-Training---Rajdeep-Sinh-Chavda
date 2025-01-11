@@ -1,0 +1,56 @@
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+
+    width: 70vw;
+    height: 35vh;
+    padding: 14px;
+    border: 1px solid black;
+    padding: 20px;
+    background-color: #f5f5f5;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.download-section,
+.upload-section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.download-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.download-link:hover {
+    background-color: #45a049;
+}
+
+input[type="file"] {
+    padding: 10px;
+    font-size: 16px;
+}
+
+#uploadMessage {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #555;
+}

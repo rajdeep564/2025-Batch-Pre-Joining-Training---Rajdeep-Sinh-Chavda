@@ -1,0 +1,58 @@
+.outer{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.invoice{
+    width: 51%;
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin-bottom: 61px;
+}
+
+.outer h1{
+    font-weight: lighter;
+    margin: 0;
+    padding: 0;
+    font-size: 19px;
+}
+.invoice tr, 
+.invoice td, 
+.invoice th {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.cell_style{
+    background-color: #DDDDDD;
+    font-weight: bold;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.Ian{
+    width: 51%;
+    border: 1px solid black;
+}
+
+.Ian tr, 
+.Ian td, 
+.Ian th {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.tcentre{
+    text-align: center;
+}
+
+.invoice thead{
+    text-align: left;
+}
