@@ -8,104 +8,120 @@
 </head>
 
 <style>
-
-    .container{
+    .container {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
+        padding: 10px;
+    }
+
+    .table-container {
+        width: 100%;
+        max-width: 1200px;  /* Limit maximum width */
+        overflow-x: auto;   /* Enable horizontal scrolling on small screens */
+        height: 500px;      /* Fixed height */
     }
 
     td:first-child {
-            font-weight: bold;
-        }
+        font-weight: bold;
+    }
+
+    table {
+        width: 100%;  /* Make the table responsive within the container */
+    }
+
+
 </style>
+
 <body>
-    <div class="table-responsive container">
-        <table class="table table-hover">
-            <!-- Table Header -->
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>First</th>
-                    <th>Last</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Location</th>
-                    <th>Hobby</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-    
-            <!-- Table Body -->
-            <tbody>
-                <tr>
-                    <td>35</td>
-                    <td>Jane</td>
-                    <td>Smith</td>
-                    <td>js@gmail.com</td>
-                    <td>503-555-5555</td>
-                    <td>Portland, Oregon</td>
-                    <td>Photography</td>
-                    <td>
-                        <button class="btn btn-warning">Edit</button>
-                        <button class="btn btn-danger">Del</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>36</td>
-                    <td>Tristan</td>
-                    <td>Rodriguez</td>
-                    <td>tr@gmail.com</td>
-                    <td>201-555-5555</td>
-                    <td>New York, New York</td>
-                    <td></td>
-                    <td>
-                        <button class="btn btn-warning">Edit</button>
-                        <button class="btn btn-danger">Del</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>37</td>
-                    <td>Andrea</td>
-                    <td>Jones</td>
-                    <td>aj@gmail.com</td>
-                    <td>503-555-5555</td>
-                    <td>Portland, Oregon</td>
-                    <td>Programming</td>
-                    <td>
-                        <button class="btn btn-warning">Edit</button>
-                        <button class="btn btn-danger">Del</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>38</td>
-                    <td>Elliott</td>
-                    <td>Richardson</td>
-                    <td>er@gmail.com</td>
-                    <td></td>
-                    <td>Boise, Idaho</td>
-                    <td></td>
-                    <td>
-                        <button class="btn btn-warning">Edit</button>
-                        <button class="btn btn-danger">Del</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>39</td>
-                    <td>June</td>
-                    <td>Bug</td>
-                    <td>jb@gmail.com</td>
-                    <td></td>
-                    <td></td>
-                    <td>Cooking</td>
-                    <td>
-                        <button class="btn btn-warning">Edit</button>
-                        <button class="btn btn-danger">Del</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="container">
+        <div class="table-container">
+            <table class="table table-hover">
+                <!-- Table Header -->
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First</th>
+                        <th>Last</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Location</th>
+                        <th>Hobby</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+        
+                <!-- Table Body -->
+                <tbody>
+                    <tr>
+                        <td>35</td>
+                        <td>Jane</td>
+                        <td>Smith</td>
+                        <td>js@gmail.com</td>
+                        <td>503-555-5555</td>
+                        <td>Portland, Oregon</td>
+                        <td>Photography</td>
+                        <td>
+                            <button class="btn btn-warning">Edit</button>
+                            <button class="btn btn-danger">Del</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>36</td>
+                        <td>Tristan</td>
+                        <td>Rodriguez</td>
+                        <td>tr@gmail.com</td>
+                        <td>201-555-5555</td>
+                        <td>New York, New York</td>
+                        <td></td>
+                        <td>
+                            <button class="btn btn-warning">Edit</button>
+                            <button class="btn btn-danger">Del</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>37</td>
+                        <td>Andrea</td>
+                        <td>Jones</td>
+                        <td>aj@gmail.com</td>
+                        <td>503-555-5555</td>
+                        <td>Portland, Oregon</td>
+                        <td>Programming</td>
+                        <td>
+                            <button class="btn btn-warning">Edit</button>
+                            <button class="btn btn-danger">Del</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>38</td>
+                        <td>Elliott</td>
+                        <td>Richardson</td>
+                        <td>er@gmail.com</td>
+                        <td></td>
+                        <td>Boise, Idaho</td>
+                        <td></td>
+                        <td>
+                            <button class="btn btn-warning">Edit</button>
+                            <button class="btn btn-danger">Del</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>39</td>
+                        <td>June</td>
+                        <td>Bug</td>
+                        <td>jb@gmail.com</td>
+                        <td></td>
+                        <td></td>
+                        <td>Cooking</td>
+                        <td>
+                            <button class="btn btn-warning">Edit</button>
+                            <button class="btn btn-danger">Del</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     
 </body>
