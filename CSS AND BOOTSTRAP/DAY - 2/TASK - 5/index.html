@@ -6,6 +6,8 @@
     <title>Task - 5</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         body {
             background-color: #ebebeb;
@@ -73,6 +75,7 @@
         .is-invalid {
             border-color: red;
         }
+        
     </style>
 </head>
 <body>
@@ -126,8 +129,12 @@
                             </div>
                             <div class="mb-3">
                                 <label for="time" class="form-label">Preferred Time</label>
-                                <input type="time" class="form-control" id="time"  required>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                                    <input type="time" class="form-control" id="time" required>
+                                </div>
                             </div>
+                            
                             <button type="submit" class="btn btn-primary w-100">Schedule Appointment</button>
                         </form>
                     </div>
@@ -141,6 +148,21 @@
     <script>
         const appointmentForm = document.getElementById('appointmentForm');
         const dateField = document.getElementById('date');
+
+
+        Array.from(appointmentForm.elements).forEach(input => {
+            if (input.tagName === 'INPUT') {
+                input.addEventListener('input', () => {
+                    if (input.validity.valid) {
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    } else {
+                        input.classList.remove('is-valid');
+                        input.classList.add('is-invalid');
+                    }
+                });
+            }
+        });
 
         
         flatpickr(dateField, {
