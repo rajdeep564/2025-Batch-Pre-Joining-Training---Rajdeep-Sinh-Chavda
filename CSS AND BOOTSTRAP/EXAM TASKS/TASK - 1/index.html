@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task - 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap');
+
+        body {
+            font-family: "Roboto", serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            max-height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container-fluid {
+            max-height: 100vh;
+            background-color: white;
+        }
+
+        .img-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .row {
+            min-height: 97vh;
+        }
+
+        img {
+            max-width: 90%;
+            height: auto;
+        }
+
+        .btn-primary {
+            background-color: #3cdf98;
+            border: none;
+            border-radius: 0;
+        }
+
+        .btn-primary:hover {
+            background-color: #32b38c;
+        }
+
+        .forgot_password_text {
+            color: #3cdf98;
+        }
+
+        .forgot_password_text:hover {
+            color: #32b38c;
+        }
+
+        .main_heading {
+            color: #1b1b1b;
+        }
+
+        label {
+            color: #aaaaaa;
+        }
+
+        .input-group-text {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-md-0 p-5">
+        <div class="row justify-content-center align-items-center flex-md-row">
+            <div class="col-lg-4 col-md-4 col-sm-12 form-container ps-lg-5">
+                <h2 class="mb-5 main_heading">Welcome, Let's Get Started</h2>
+                <h3 class="text-body-secondary mb-2 mb-md-4">Log In</h3>
+                <form id="loginForm" novalidate>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required
+                            pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$">
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password" required
+                                title="Password must be at least 6 characters long and contain both letters and numbers."
+                                pattern="^(?!\s*$).+">
+                            <span class="input-group-text" id="togglePassword">
+                                <i class="bi bi-eye"></i>
+                            </span>
+                            <div class="invalid-feedback"> password cant be blank</div>
+                            <div class="valid-feedback">Looks good!</div>
+                        </div>
+
+                    </div>
+                    <a href="#" class="forgot_password_text mt-2 d-flex flex-row-reverse">Forgot Password?</a>
+                    <button type="submit" class="btn btn-primary mt-3">Log In</button>
+                </form>
+            </div>
+            <div class="col-lg-4 col-md-4 offset-lg-2 offset-md-2 p-md-0 p-sm-5 img-container">
+                <img class="image-fluid" src="assets/images/6325227.jpg" alt="Login Image">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script>
+        
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordField = document.getElementById('password');
+
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordField.getAttribute('type') === 'password';
+            passwordField.setAttribute('type', isPassword ? 'text' : 'password');
+
+         
+            togglePassword.querySelector('i').classList.toggle('bi-eye');
+            togglePassword.querySelector('i').classList.toggle('bi-eye-slash');
+        });
+
+    
+        const form = document.getElementById('loginForm');
+        const inputs = form.querySelectorAll('input');
+
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (input.checkValidity()) {
+                    input.classList.remove('is-invalid');
+                    input.classList.add('is-valid');
+                } else {
+                    input.classList.remove('is-valid');
+                    input.classList.add('is-invalid');
+                }
+            });
+
+            input.addEventListener('blur', () => {
+                if (input.value.trim() === '') {
+                    input.classList.remove('is-valid');
+                    input.classList.add('is-invalid');
+                }
+            });
+        });
+
+        
+        form.addEventListener('submit', (event) => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    </script>
+
+</body>
+
+</html>
