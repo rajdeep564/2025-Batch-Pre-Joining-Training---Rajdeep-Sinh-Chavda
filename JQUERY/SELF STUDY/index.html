@@ -3,16 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Self Study</title>
+    <title>CRUD Application - Student Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+        }
+    </style>
 </head>
 <body>
 
-    <p>Hello this is a paragraph</p>
-    <button id="button">hide para</button>
-    <button id="button2">Show para</button>
-    
+    <div class="container">
+        <h2 class="text-center">Student Management - CRUD</h2>
+        
+        <!-- Display the Unique ID from Session Storage -->
+        <div class="mb-3">
+            <h4>Session Unique ID:</h4>
+            <p id="uniqueIdDisplay"></p>
+        </div>
+
+        <!-- CRUD Form -->
+        <div class="mb-4">
+            <h4>Add / Edit Student</h4>
+            <form id="studentForm">
+                <div class="mb-3">
+                    <label for="studentName" class="form-label">Student Name</label>
+                    <input type="text" class="form-control" id="studentName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="enrollment" class="form-label">Enrollment Number</label>
+                    <input type="text" class="form-control" id="enrollment" required>
+                </div>
+                <div class="mb-3">
+                    <label for="class" class="form-label">Class</label>
+                    <input type="text" class="form-control" id="class" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Student</button>
+            </form>
+        </div>
+
+        <h4>Student List</h4>
+        <ul id="studentList" class="list-group"></ul>
+
+        <h4>Stored Preferences (Cookies)</h4>
+        <button id="toggleTheme" class="btn btn-secondary">Toggle Dark/Light Theme</button>
+    </div>
+
+    <script>
+        // DOM Elements
+        const studentForm = document.getElementById('studentForm');
+        const studentNameInput = document.getElementById('studentName');
+        const enrollmentInput = document.getElementById('enrollment');
+        const classInput = document.getElementById('class');
+        const studentList = document.getElementById('studentList');
+        const toggleThemeButton = document.getElementById('toggleTheme');
+        const uniqueIdDisplay = document.getElementById('uniqueIdDisplay');
+
+        // Session Storage: Generate and store Unique ID
+        function generateUniqueId() {
+            const now = new Date();
+            const uniqueId = now.toISOString().replace(/[-:T.]/g, '').slice(0, 15); // Format: YYYYMMDDHHMMSS
+            return uniqueId;
+        }
+
+        // Store the Unique ID in Session Storage
+        function storeUniqueId() {
+            const uniqueId = generateUniqueId();
+            sessionStorage.setItem('uniqueId', uniqueId);
+            uniqueIdDisplay.textContent = uniqueId; // Show the unique ID on the page
+        }
+
+        // Retrieve the Unique ID from Session Storage
+        function getStoredUniqueId() {
+            return sessionStorage.getItem('uniqueId');
+        }
+
+        // Load Students from Local Storage
+        function loadStudents() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            studentList.innerHTML = ''; // Clear current list
+            students.forEach((student, index) => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.innerHTML = `
+                    ${student.name} (${student.enrollment}) - ${student.class}
+                    <button class="btn btn-sm btn-warning float-end ms-2" onclick="editStudent(${index})">Edit</button>
+                    <button class="btn btn-sm btn-danger float-end" onclick="deleteStudent(${index})">Delete</button>
+                `;
+                studentList.appendChild(li);
+            });
+        }
+
+        // Save Student Data to Local Storage
+        function saveStudentData() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const student = {
+                name: studentNameInput.value,
+                enrollment: enrollmentInput.value,
+                class: classInput.value
+            };
+            students.push(student);
+            localStorage.setItem('students', JSON.stringify(students));
+            loadStudents(); // Reload list after saving
+            studentForm.reset();
+        }
+
+        // Update an existing student
+        function updateStudentData(index) {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            students[index] = {
+                name: studentNameInput.value,
+                enrollment: enrollmentInput.value,
+                class: classInput.value
+            };
+            localStorage.setItem('students', JSON.stringify(students));
+            loadStudents(); // Reload list after updating
+            studentForm.reset();
+        }
+
+        // Edit Student
+        function editStudent(index) {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const student = students[index];
+            studentNameInput.value = student.name;
+            enrollmentInput.value = student.enrollment;
+            classInput.value = student.class;
+            // Change the form submit action to update
+            studentForm.onsubmit = function (e) {
+                e.preventDefault();
+                updateStudentData(index);
+            };
+        }
+
+        // Delete Student
+        function deleteStudent(index) {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            students.splice(index, 1);
+            localStorage.setItem('students', JSON.stringify(students));
+            loadStudents(); // Reload list after deletion
+        }
+
+        // CRUD form submit handler
+        studentForm.onsubmit = function (e) {
+            e.preventDefault();
+            // Check if enrollment exists to update or create a new entry
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const enrollment = enrollmentInput.value;
+            const existingStudentIndex = students.findIndex(student => student.enrollment === enrollment);
+            if (existingStudentIndex === -1) {
+                saveStudentData();
+            } else {
+                updateStudentData(existingStudentIndex);
+            }
+        };
+
+        // Toggle Dark/Light Theme using Cookies
+        toggleThemeButton.addEventListener('click', function() {
+            const currentTheme = getCookie('theme');
+            if (currentTheme === 'dark') {
+                document.body.style.backgroundColor = 'white';
+                document.body.style.color = 'black';
+                setCookie('theme', 'light', 7); // Set cookie for light theme
+            } else {
+                document.body.style.backgroundColor = 'black';
+                document.body.style.color = 'white';
+                setCookie('theme', 'dark', 7); // Set cookie for dark theme
+            }
+        });
+
+        // Helper Functions for Cookies
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+        }
+
+        function getCookie(name) {
+            const nameEq = name + "=";
+            const decodedCookies = decodeURIComponent(document.cookie);
+            const cookiesArray = decodedCookies.split(';');
+            for (let i = 0; i < cookiesArray.length; i++) {
+                let c = cookiesArray[i];
+                while (c.charAt(0) === ' ') {
+                    c = c.substring(1, c.length);
+                }
+                if (c.indexOf(nameEq) === 0) {
+                    return c.substring(nameEq.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        // Initial Data Load
+        loadStudents();
+
+        // Store the unique ID once the page loads
+        if (!getStoredUniqueId()) {
+            storeUniqueId();
+        } else {
+            uniqueIdDisplay.textContent = getStoredUniqueId(); // Display the unique ID if it exists
+        }
+
+    </script>
+
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="script.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </html>

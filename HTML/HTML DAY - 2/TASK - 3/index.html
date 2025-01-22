@@ -97,41 +97,66 @@
 </head>
 <body>
     <div class="calculator">
-        <div class="display">
-            <span>0</span>
-        </div>
-        <table class="buttons">
-            <tr  >
-                <td style="width: 25%;"><button class="color">+</button></td>
-                <td style="width: 25%;"><button class="color" >-</button></td>
-                <td style="width: 25%;"><button class="color">x</button></td>
-                <td style="width: 25%;" class=" color">/</td>
-            </tr>
-            <tr >
-                <td><button>7</button></td>
-                <td><button>8</button></td>
-                <td><button>9</button></td>
-                <td class="equal" rowspan="4">=</td>
-            </tr>
-            <tr colspan="4">
-                <td><button>4</button></td>
-                <td><button>5</button></td>
-                <td><button>6</button></td>
-                <td></td>
-            </tr>
-            <tr colspan="4">
-                <td><button>1</button></td>
-                <td><button>2</button></td>
-                <td><button>3</button></td>
-                <td></td>
-            </tr>
-            <tr colspan="4">
-                <td><button>0</button></td>
-                <td><button>.</button></td>
-                <td><button>AC</button></td>
-                <td></td>
-            </tr>
-        </table>
+      <div class="display">
+        <span id="result">0</span>
+      </div>
+      <table class="buttons">
+        <tr>
+          <td style="width: 25%;"><button class="color" onclick="appendNumber('+')">+</button></td>
+          <td style="width: 25%;"><button class="color" onclick="appendNumber('-')">-</button></td>
+          <td style="width: 25%;"><button class="color" onclick="appendNumber('*')">x</button></td>
+          <td style="width: 25%;" class="color" onclick="appendNumber('/')">/</td>
+        </tr>
+        <tr>
+          <td><button onclick="appendNumber(7)">7</button></td>
+          <td><button onclick="appendNumber(8)">8</button></td>
+          <td><button onclick="appendNumber(9)">9</button></td>
+          <td class="equal" rowspan="4" onclick="calculate()">=</td>
+        </tr>
+        <tr colspan="4">
+          <td><button onclick="appendNumber(4)">4</button></td>
+          <td><button onclick="appendNumber(5)">5</button></td>
+          <td><button onclick="appendNumber(6)">6</button></td>
+          <td></td>
+        </tr>
+        <tr colspan="4">
+          <td><button onclick="appendNumber(1)">1</button></td>
+          <td><button onclick="appendNumber(2)">2</button></td>
+          <td><button onclick="appendNumber(3)">3</button></td>
+          <td></td>
+        </tr>
+        <tr colspan="4">
+          <td><button onclick="appendNumber(0)">0</button></td>
+          <td><button onclick="appendNumber('.')">.</button></td>
+          <td><button onclick="clearDisplay()">AC</button></td>
+          <td></td>
+        </tr>
+      </table>
     </div>
-</body>
-</html>
+  
+    <script>
+      const resultDisplay = document.getElementById('result');
+      let currentInput = '';
+  
+      function appendNumber(number) {
+        currentInput += number;
+        resultDisplay.textContent = currentInput;
+      }
+  
+      function clearDisplay() {
+        currentInput = '';
+        resultDisplay.textContent = '0';
+      }
+  
+      function calculate() {
+        try {
+          resultDisplay.textContent = eval(currentInput);
+          currentInput = resultDisplay.textContent; // Update currentInput with the result
+        } catch (error) {
+          resultDisplay.textContent = 'Error';
+          currentInput = '';
+        }
+      }
+    </script>
+  </body>
+  </html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Slab Calculator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Tax Slab Calculation</h1>
+        <form id="taxForm">
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="mobile">Mobile:</label>
+                    <input type="tel" class="form-control" id="mobile" pattern="[0-9]{10}" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="birthdate">Birthdate:</label>
+                    <input type="date" class="form-control" id="birthdate" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="gender">Gender:</label>
+                    <select class="form-control" id="gender" required>
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="income">Income:</label>
+                    <input type="number" class="form-control" id="income" min="0" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="loan">Loan:</label>
+                    <input type="number" class="form-control" id="loan" min="0">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="investment">Investment:</label>
+                    <input type="number" class="form-control" id="investment" min="0">
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="calculate">Calculate</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+
+            <div id="output" class="mt-3">
+                <div id="result" style="display: none;">
+                    <p><strong>Name:</strong> <span id="outputName"></span></p>
+                    <p><strong>Taxable Amount:</strong> <span id="taxableAmount"></span></p>
+                    <p><strong>Payable Tax:</strong> <span id="payableTax"></span></p>
+                </div>
+            </div>
+        </form>
+
+        <div class="mt-4">
+            <h2>Tax Slab:</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>For Men:</h3>
+                    <p>Income: up to 2.4L - No Tax</p>
+                    <p>Income: 2.4L to 6L - 10%</p>
+                    <p>Income: above 6L - 20%</p>
+                </div>
+                <div class="col-md-4">
+                    <h3>For Women:</h3>
+                    <p>Income: up to 2.6L - No Tax</p>
+                    <p>Income: 2.6L to 7L - 10%</p>
+                    <p>Income: above 7L - 20%</p>
+                </div>
+                <div class="col-md-4">
+                    <h3>For Senior Citizen:</h3>
+                    <p>Income: up to 3L - No Tax</p>
+                    <p>Income: 3L to 7L - 10%</p>
+                    <p>Income: above 7L - 20%</p>
+                </div>
+            </div>
+
+            <div>
+                <h2>Tax Exemptions:</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>1. 80% of the Loan amount or 20% of total income, whichever is less, is non-taxable.</p>
+                        <p class="ml-3"><i>Example: If your Total Income is 200 and the Loan is 100, then 80% of the Loan = 80 INR and 20% of Income = 40 INR. The lesser amount (40 INR) is non-taxable, and 160 INR is taxable.</i></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>2. Any amount invested up to 1,00,000 INR (1L) is non-taxable.</p>
+                        <p class="ml-3"><i>Example: If you invested 1,60,000 INR, then 1,00,000 INR is the non-taxable amount.</i></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

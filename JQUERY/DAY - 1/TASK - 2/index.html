@@ -49,7 +49,7 @@
                         <div class="invalid-feedback">Please enter a valid email.</div>
                     </div>
                     <div class="col-12">
-                        <input id="phone" type="tel" class="form-control" placeholder="Phone" required pattern="^[6-9]\d{9}$" maxlength="10">
+                        <input id="phone" type="number" class="form-control" placeholder="Phone" required pattern="^[6-9]\d{9}$" maxlength="10">
                         <div class="invalid-feedback">Phone number must be 10 digits.</div>
                     </div>
                     <div class="col-12">
@@ -101,7 +101,7 @@
                     </div>
 
                     <div class="col-12">
-                        <input id="accountNumber" type="text" class="form-control" placeholder="Account Number" required pattern="^\d{12}$">
+                        <input id="accountNumber" type="number" class="form-control" placeholder="Account Number" required pattern="^\d{12}$" maxlength="12">
                         <div class="invalid-feedback">Account number must be 12 digits.</div>
                     </div>
                 </div>
@@ -125,11 +125,11 @@
                         <div class="invalid-feedback">Cardholder name can only contain letters.</div>
                     </div>
                     <div class="col-12">
-                        <input id="cardNumber" type="text" class="form-control" placeholder="Card Number" required pattern="^\d{16}$">
+                        <input id="cardNumber" type="number" class="form-control" placeholder="Card Number" required pattern="^\d{16}$" maxlength="16">
                         <div class="invalid-feedback">Card number must be 16 digits.</div>
                     </div>
                     <div class="col-12">
-                        <input id="cvv" type="text" class="form-control" placeholder="CVV" required pattern="^\d{3}$">
+                        <input id="cvv" type="number" class="form-control" placeholder="CVV" required pattern="^\d{3}$" maxlength="3">
                         <div class="invalid-feedback">CVV must be 3 digits.</div>
                     </div>
                     <div class="col-12">
