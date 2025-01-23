@@ -43,11 +43,30 @@
 
 // example 5
 
-const revString = (str) => {
-    let str1 = str.split();
+// const revString = (str) => {
+//     let str1 = str.split();
 
-    array.forEach(str1 => {
-        let str2 = str
+//     array.forEach(str1 => {
+//         let str2 = str
         
-    });
+//     });
+// }
+
+
+// example - 6
+
+function checkNum(num){
+    if(!isNaN){
+        if(num<0){
+            console.log("num is negative");
+        }
+        else if(num>0){
+            console.log("num is positive");
+    
+        }
+        else{
+            console.log("num is zero");
+        }
+    }
+    
 }
