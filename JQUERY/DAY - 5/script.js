@@ -137,6 +137,7 @@ todoForm.addEventListener('submit',async (e) =>{
             
         // }
 
+
         let response = await fetch(API_URL, getRequestOption('POST', todoData));
 
         await response.json();
@@ -179,7 +180,7 @@ document.addEventListener('click',async (e) =>{
         const todoId = e.target.getAttribute('data-id');
         const loader = document.getElementById('loader');
         const loaderBox = document.getElementById('loader_box');
-        const todoTable = document.getElementById('todoTable');
+        // const todoTable = document.getElementById('todoTable');
         const saveButton = document.getElementById('saving_button');
         loader.style.display = 'flex';
         loaderBox.style.display = 'flex';
