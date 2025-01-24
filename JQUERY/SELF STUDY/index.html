@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Test</title>
+<style>
+body {
+  background-color: #00CC66;
+}
+body.dark {
+  background-color: #000000;
+}
+body.light {
+  background-color: #DCDCDC;
+}
+p {
+  color: #000000;
+}
+.dark p {
+  color: #FFFFFF;
+}
+.light p {
+  color: #6699FF;
+}
+</style>
+<script>
+function setCookie(cvalue) {
+  var d = new Date();
+  d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
+  console.log(d);
+  var expires = "expires="+d.toUTCString();
+  console.log(expires);
+  document.cookie = "theme=" + cvalue + ";" + expires + "; path=/";
+}
+function getCookie(theme) {
+  var name = theme + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+function checkCookie() {
+  var theme = getCookie("theme");
+  if (theme == "default") {
+  body.className = "";
+  }
+  if (theme == "light") {
+  body.className = "light";
+  }
+  if (theme == "dark") {
+  body.className = "dark";
+  }  
+}
+</script>
+</head>
+<body>
+<p>Test</p>
+<button class="theme1">Default</button>
+<button class="theme2">Dark</button>
+<button class="theme3">Light</button>
+<script>
+var body = document.querySelector("body"),
+goDefault = function () {
+  body.className = "";
+  setCookie("default");
+},
+goDark = function () {
+  body.className = "";
+  body.classList.add("dark");
+  setCookie("dark");
+},
+goLight = function () {
+  body.className = "";
+  body.classList.add("light");
+  setCookie("light");
+};
+document.querySelector(".theme1").addEventListener("click", goDefault, false);
+document.querySelector(".theme2").addEventListener("click", goDark, false);
+document.querySelector(".theme3").addEventListener("click", goLight, false);
+
+checkCookie();
+</script>
+</body>
+</html>
