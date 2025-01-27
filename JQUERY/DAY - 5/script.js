@@ -68,7 +68,7 @@ async function fetchTodos(){
         todos.forEach((todo,index) => {
 
             const statusButton = todo.isCompleted ?
-             `<button class="btn btn-warning toggle-status" data-id="${todo.id}">Mark Incomplete</button>`
+             `<button class="btn btn-warning toggle-status" data-id="${todo.id}">Mark as Incomplete</button>`
              : `<button class="btn btn-success toggle-status" data-id="${todo.id}">Mark Completed</button>`;
 
              const row = `
@@ -152,11 +152,6 @@ todoForm.addEventListener('submit',async (e) =>{
 
         saveButton.textContent = 'Save Todo';
         saveButton.disabled = false;
-
-
-
-
-
 
 
 

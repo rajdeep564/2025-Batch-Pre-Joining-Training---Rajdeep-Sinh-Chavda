@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request for Taxpayer Identification</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Signature pad CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .signature-pad {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            height: 200px;
+        }
+        .ssn-input {
+            width: 40px !important;
+            text-align: center;
+            margin-right: 5px;
+        }
+        .ein-input {
+            width: 50px !important;
+            text-align: center;
+            margin-right: 5px;
+        }
+        .print-section {
+            display: none;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+            .print-section {
+                display: block;
+            }
+        }
+
+        input, canvas ,.cbox {
+            margin-top: 20px;
+            }
+        .form-check{
+            margin-top: 20px;
+        }
+            
+
+    </style>
+</head>
+<body class="bg-light">
+    <div class="form-container">
+        <form id="taxpayerForm" class="p-3">
+            <h1 class="mb-4">Request for Taxpayer Identification Number and Certification</h1>
+            <p>Go to www.irs.gov/FormW9 for instructions and the latest information.</p>
+
+            <hr class="mt-5 mb-5">
+            
+            <!-- Business name field -->
+            <div class="mb-5 ">
+                <label>1. Name of entity/individual. An entry is required. (For a sole proprietor or disregarded entity, enter the owner’s name on line 1, and enter the business/disregardedentity’s name on line 2.)</label>
+                <input type="text" class="form-control" name="businessName" required>
+            </div>
+
+            <!-- Business name 2 field -->
+            <div class="mb-5 ">
+                <label>2. Business name/disregarded entity name, if different from above.</label>
+                <input type="text" class="form-control" name="businessName2">
+            </div>
+
+            <!-- Tax Classification -->
+            <div class="mb-5 ">
+                <label>3. Check appropriate boxes for federal tax classification:</label>
+                <div class="form-check ">
+                    <input class="form-check-input" type="checkbox" name="taxClassification" value="individual" required>
+                    <label class="form-check-label">Individual/Sole proprietor</label>
+                </div>
+                <div class="form-check ">
+                    <input class="form-check-input" type="checkbox" name="taxClassification" value="ccorp">
+                    <label class="form-check-label">C Corporation</label>
+                </div>
+                <div class="form-check ">
+                    <input class="form-check-input" type="checkbox" name="taxClassification" value="scorp">
+                    <label class="form-check-label">S Corporation</label>
+                </div>
+                <div class="form-check ">
+                    <input class="form-check-input" type="checkbox" name="taxClassification" value="partnership">
+                    <label class="form-check-label">Partnership</label>
+                </div>
+                <div class="form-check ">
+                    <input class="form-check-input" type="checkbox" name="taxClassification" value="trust">
+                    <label class="form-check-label">Trust/estate</label>
+                </div>
+                <div class="form-check ">
+                    <input class="form-check-input" type="checkbox" name="taxClassification" value="llc">
+                    <label class="form-check-label">Other</label>
+                </div>
+            </div>
+            
+
+            <!-- Address -->
+            <div class="mb-5 ">
+                <label>If you selected "Limited liability company", enter the tax classification (C=C corporation, S=S corporation, P=Partnership)</label>
+                <input type="text" class="form-control" name="address" required>
+            </div>
+
+            <div class="mb-5 ">
+                <label>3b. If on line 3a you checked “Partnership” or “Trust/estate,” or checked “LLC” and entered “P” as its tax classification, and you are providing this form to a partnership, trust, or estate in which you have an ownership interest, check this box if you have any foreign partners, owners, or beneficiaries.</label>
+                <input class="form-check-input cbox" type="checkbox" name="Partnership n Trust/estate" value="scorp">
+            </div>
+
+            <div class="mb-5 ">
+                <label>2. Exemptions (codes apply only to certain entities, not individuals; see instructions on page 3):</label>
+                <input type="text" class="form-control" name="businessName2">
+            </div>
+
+
+
+            <!-- City State ZIP -->
+            <div class="row mb-5">
+                <div class="col">
+                    <label>City</label>
+                    <input type="text" class="form-control" name="city" required>
+                </div>
+                <div class="col-md-4">
+                    <label>State</label>
+                    <input type="text" class="form-control" name="state" required>
+                </div>
+                <div class="col-md-4">
+                    <label>ZIP</label>
+                    <input type="text" class="form-control" name="zip" required>
+                </div>
+            </div>
+
+            <!-- List account numbers -->
+            <div class="mb-5">
+                <label>7. List account number(s) here (optional)</label>
+                <input type="text" class="form-control" name="accountNumbers">
+            </div>
+
+            <!-- Part I -->
+            <h5 class="mt-4">Part I - Taxpayer Identification Number (TIN)</h5>
+
+            <!-- SSN -->
+            <div class="mb-5">
+                <label>Social Security Number</label>
+                <div class="d-flex">
+                    <input type="text" class="form-control ssn-input" maxlength="3" name="ssn1">
+                    <input type="text" class="form-control ssn-input" maxlength="2" name="ssn2">
+                    <input type="text" class="form-control ssn-input" maxlength="4" name="ssn3">
+                </div>
+            </div>
+
+            <!-- EIN -->
+            <div class="mb-5">
+                <label>OR Employer Identification Number</label>
+                <div class="d-flex">
+                    <input type="text" class="form-control ein-input" maxlength="2" name="ein1">
+                    <input type="text" class="form-control ein-input" maxlength="7" name="ein2">
+                </div>
+            </div>
+
+            <!-- Part II -->
+            <h5 class="mt-4">Part II - Certification</h5>
+
+            <!-- Signature -->
+            <div class="mb-5">
+                <label>Signature</label>
+                <canvas id="signaturePad" class="signature-pad"></canvas>
+                <button type="button" class="btn btn-secondary btn-sm mt-2" id="clearSignature">Clear Signature</button>
+            </div>
+
+            <!-- Date -->
+            <div class="mb-5">
+                <label>Date</label>
+                <input type="text" class="form-control" id="datePicker" required>
+            </div>
+
+            <!-- Submit and Print buttons -->
+            <div class="mb-5 no-print">
+                <button type="submit" class="btn btn-primary">Submit Form</button>
+                <button type="button" class="btn btn-secondary" id="printButton">Print Form</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Print Preview Section -->
+    <div class="print-section" id="printPreview"></div>
+
+    <!-- Required Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+</html>
