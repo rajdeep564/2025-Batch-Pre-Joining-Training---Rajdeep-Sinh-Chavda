@@ -145,6 +145,102 @@
 <script>
 
 
+function switchTab(tabName) {
+    const tabs = ['unreconciled', 'reconciled', 'exclude'];
+    
+    // Hide all tab content
+    tabs.forEach(tab => {
+        const tabContent = document.getElementById(`${tab}TabContent`);
+        if (tabContent) {
+            tabContent.style.display = 'none';
+        }
+    });
+
+    // Show the selected tab content
+    const selectedTabContent = document.getElementById(`${tabName}TabContent`);
+    if (selectedTabContent) {
+        selectedTabContent.style.display = 'block';
+    }
+
+    // Update active tab link
+    tabs.forEach(tab => {
+        const tabLink = document.getElementById(`${tab}Tab`);
+        if (tabLink) {
+            tabLink.classList.remove('active');
+        }
+    });
+    const selectedTabLink = document.getElementById(`${tabName}Tab`);
+    if (selectedTabLink) {
+        selectedTabLink.classList.add('active');
+    }
+
+    // Load the appropriate transactions for the selected tab
+    if (tabName === 'reconciled') {
+        loadReconciledTransactions();
+    } else {
+        loadUnreconciledTransactions(); // Load unreconciled transactions if tab is 'unreconciled'
+    }
+}
+
+
+function loadUnreconciledTransactions() {
+    const company1List = document.getElementById('company1List');
+    const company2List = document.getElementById('company2List');
+
+    // Simulate the fetching of unreconciled transactions from localStorage or API
+    const storedData = localStorage.getItem('transactionsData');
+    if (storedData) {
+        const data = JSON.parse(storedData);
+        renderTransactionList(data.fromCompanyTransaction.filter(transaction => !transaction.isReconciled), 'Company 1', company1List);
+        renderTransactionList(data.toCompanyTransaction.filter(transaction => !transaction.isReconciled), 'Company 2', company2List, true);
+    }
+}
+
+// Function to load Reconciled Transactions
+function loadReconciledTransactions() {
+    const company1List = document.getElementById('company1List');
+    const company2List = document.getElementById('company2List');
+
+    company1List.innerHTML = '';
+    company2List.innerHTML = '';
+
+    // Simulate the fetching of reconciled transactions from localStorage or API
+    const storedData = localStorage.getItem('transactionsData');
+    if (storedData) {
+        const data = JSON.parse(storedData);
+        showTransactionList(data.fromCompanyTransaction.filter(transaction => transaction.isReconciled), 'Company 1', company1List);
+        showTransactionList(data.toCompanyTransaction.filter(transaction => transaction.isReconciled), 'Company 2', company2List, true);
+    }
+}
+
+// Function to load Excluded Transactions
+function loadExcludedTransactions() {
+    const company1List = document.getElementById('company1List');
+    const company2List = document.getElementById('company2List');
+
+    // Simulate the fetching of excluded transactions (if needed)
+    // You can filter out excluded transactions if you have this data in localStorage
+    const storedData = localStorage.getItem('transactionsData');
+    if (storedData) {
+        const data = JSON.parse(storedData);
+        renderTransactionList(data.fromCompanyTransaction.filter(transaction => transaction.isExcluded), 'Company 1', company1List);
+        renderTransactionList(data.toCompanyTransaction.filter(transaction => transaction.isExcluded), 'Company 2', company2List, true);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Add event listeners to each tab
+    document.getElementById('unreconciledTab').addEventListener('click', () => switchTab('unreconciled'));
+    document.getElementById('reconciledTab').addEventListener('click', () => switchTab('reconciled'));
+    document.getElementById('excludeTab').addEventListener('click', () => switchTab('exclude'));
+
+    // Initially render the unreconciled transactions (default tab)
+    switchTab('unreconciled');
+});
+
+
+
+
 
 
      let currentPage = 1;
@@ -218,7 +314,124 @@ function renderTransactions(data) {
     };
 
     // Function to render transaction list for each company
-    const renderTransactionList = (transactions, company, listElement, isDraggable = false) => {
+    
+    // Handle drop event in the center zone
+    const handleDrop = (event) => {
+        event.preventDefault();
+
+        // Get the dragged transaction data
+        const transactionData = JSON.parse(event.dataTransfer.getData('text/plain'));
+
+        // Log the dropped transaction data
+        console.log('Dropped Transaction Data:', transactionData);
+
+        // Ensure the amount exists in the transactionData
+        if (!transactionData.amount) {
+            console.error('Amount is missing in the dropped transaction:', transactionData);
+            return;
+        }
+
+        // Find the selected Company 1 transaction
+        const selectedTransactionDiv = document.querySelector('.transaction-item.selected');
+        if (!selectedTransactionDiv) {
+            console.error('No transaction selected from Company 1');
+            return;
+        }
+
+        const selectedTransactionId = selectedTransactionDiv.dataset.transactionId;
+
+        // Find the corresponding div in the center drop zone
+        const company1TransactionDiv = document.querySelector(`.company1-matched-transaction[data-transaction-id="${selectedTransactionId}"]`);
+        if (!company1TransactionDiv) {
+            console.error('No corresponding div found in the center for selected Company 1 transaction');
+            return;
+        }
+
+        // Add the dragged transaction to the dragged transactions array
+        draggedCompany2Transactions.push(transactionData);
+
+        // Create the dropped transaction element for Company 2
+        const droppedTransaction = document.createElement('div');
+        droppedTransaction.className = 'dropped-transaction';
+        droppedTransaction.textContent = `${transactionData.transactionType} - $${transactionData.amount}`;
+        droppedTransaction.style.backgroundColor = '#e9ecef';
+        droppedTransaction.style.padding = '10px';
+        droppedTransaction.style.marginBottom = '5px';
+        droppedTransaction.style.borderRadius = '4px';
+        droppedTransaction.style.border = '1px solid #ccc';
+
+        // Set the data-amount attribute correctly
+        droppedTransaction.dataset.amount = transactionData.amount;
+        droppedTransaction.dataset.transactionId = transactionData.transactionId;  // <-- Correct this line
+
+        // Log the data-amount attribute to confirm it's set
+        console.log('Set data-amount for dropped transaction:', droppedTransaction.dataset.amount);
+
+        // Add the dropped transaction inside the Company 1 matched div
+        company1TransactionDiv.appendChild(droppedTransaction);
+
+        // Store the dropped transaction amount in the element to be used later
+        droppedTransaction.transactionData = transactionData;  // <-- Store the transaction data directly
+
+        // Create and add the minus button
+        const minusButton = document.createElement('button');
+        minusButton.className = 'minus-btn';
+        minusButton.textContent = '-';
+        minusButton.style.marginLeft = '10px';
+        minusButton.addEventListener('click', () => {
+            // Remove the transaction from the center
+            droppedTransaction.remove();
+
+            // Remove the dragged transaction from the array
+            const index = draggedCompany2Transactions.findIndex(item => item.transactionId === transactionData.transactionId);
+            if (index !== -1) {
+                draggedCompany2Transactions.splice(index, 1);
+            }
+
+            updateReconcileButtonState(); // Update reconcile button state
+        });
+
+        // Append the minus button to the dropped transaction
+        droppedTransaction.appendChild(minusButton);
+
+        // Adjust the height of the Company 1 matched div (this simulates adding transactions)
+        company1TransactionDiv.style.height = `${company1TransactionDiv.offsetHeight + 60}px`;
+
+        updateReconcileButtonState(); // Update reconcile button state
+    };
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+    };
+
+    centreDropZone.addEventListener('dragover', handleDragOver);
+    centreDropZone.addEventListener('drop', handleDrop);
+
+    // Fetch and render only unreconciled transactions
+    const unreconciledCompany1 = filterUnreconciledTransactions(fromCompanyTransaction);
+    const unreconciledCompany2 = filterUnreconciledTransactions(toCompanyTransaction);
+    
+    console.log(unreconciledCompany1);
+    console.log(unreconciledCompany2);
+
+    renderTransactionList(unreconciledCompany1, 'Company 1', company1List);
+    renderTransactionList(unreconciledCompany2, 'Company 2', company2List, true);
+
+    // Save the updated transactions to local storage
+    // localStorage.setItem('fromCompanyTransaction', JSON.stringify(fromCompanyTransaction));
+    // localStorage.setItem('toCompanyTransaction', JSON.stringify(toCompanyTransaction));
+}
+
+
+
+//render transaction list
+
+const renderTransactionList = (transactions, company, listElement, isDraggable = false) => {
+
+    const reconcileButton = document.getElementById('reconcileButton');
+        reconcileButton.style.display = 'block';
+    const centreDropZone = document.getElementById('centreDropZone');
+        centreDropZone.style.display = 'block';
         transactions.forEach(transaction => {
             console.log(transaction);
             if (!transaction.transactionId || !transaction.transactionType || !transaction.amount || !transaction.lines) {
@@ -353,112 +566,95 @@ function renderTransactions(data) {
         });
     };
 
-    // Handle drop event in the center zone
-    const handleDrop = (event) => {
-        event.preventDefault();
 
-        // Get the dragged transaction data
-        const transactionData = JSON.parse(event.dataTransfer.getData('text/plain'));
 
-        // Log the dropped transaction data
-        console.log('Dropped Transaction Data:', transactionData);
+    // show transavtction list 
 
-        // Ensure the amount exists in the transactionData
-        if (!transactionData.amount) {
-            console.error('Amount is missing in the dropped transaction:', transactionData);
-            return;
-        }
-
-        // Find the selected Company 1 transaction
-        const selectedTransactionDiv = document.querySelector('.transaction-item.selected');
-        if (!selectedTransactionDiv) {
-            console.error('No transaction selected from Company 1');
-            return;
-        }
-
-        const selectedTransactionId = selectedTransactionDiv.dataset.transactionId;
-
-        // Find the corresponding div in the center drop zone
-        const company1TransactionDiv = document.querySelector(`.company1-matched-transaction[data-transaction-id="${selectedTransactionId}"]`);
-        if (!company1TransactionDiv) {
-            console.error('No corresponding div found in the center for selected Company 1 transaction');
-            return;
-        }
-
-        // Add the dragged transaction to the dragged transactions array
-        draggedCompany2Transactions.push(transactionData);
-
-        // Create the dropped transaction element for Company 2
-        const droppedTransaction = document.createElement('div');
-        droppedTransaction.className = 'dropped-transaction';
-        droppedTransaction.textContent = `${transactionData.transactionType} - $${transactionData.amount}`;
-        droppedTransaction.style.backgroundColor = '#e9ecef';
-        droppedTransaction.style.padding = '10px';
-        droppedTransaction.style.marginBottom = '5px';
-        droppedTransaction.style.borderRadius = '4px';
-        droppedTransaction.style.border = '1px solid #ccc';
-
-        // Set the data-amount attribute correctly
-        droppedTransaction.dataset.amount = transactionData.amount;
-        droppedTransaction.dataset.transactionId = transactionData.transactionId;  // <-- Correct this line
-
-        // Log the data-amount attribute to confirm it's set
-        console.log('Set data-amount for dropped transaction:', droppedTransaction.dataset.amount);
-
-        // Add the dropped transaction inside the Company 1 matched div
-        company1TransactionDiv.appendChild(droppedTransaction);
-
-        // Store the dropped transaction amount in the element to be used later
-        droppedTransaction.transactionData = transactionData;  // <-- Store the transaction data directly
-
-        // Create and add the minus button
-        const minusButton = document.createElement('button');
-        minusButton.className = 'minus-btn';
-        minusButton.textContent = '-';
-        minusButton.style.marginLeft = '10px';
-        minusButton.addEventListener('click', () => {
-            // Remove the transaction from the center
-            droppedTransaction.remove();
-
-            // Remove the dragged transaction from the array
-            const index = draggedCompany2Transactions.findIndex(item => item.transactionId === transactionData.transactionId);
-            if (index !== -1) {
-                draggedCompany2Transactions.splice(index, 1);
+    const showTransactionList= (transactions, company, listElement, isDraggable = false) => {
+        const centreDropZone = document.getElementById('centreDropZone');
+        centreDropZone.style.display = 'none';
+        
+        const reconcileButton = document.getElementById('reconcileButton');
+        reconcileButton.style.display = 'none';
+        transactions.forEach(transaction => {
+            console.log(transaction);
+            if (!transaction.transactionId || !transaction.transactionType || !transaction.amount || !transaction.lines) {
+                console.error('Transaction is missing expected fields:', transaction);
+                return;
             }
 
-            updateReconcileButtonState(); // Update reconcile button state
+            
+
+            
+
+            const transactionItem = document.createElement('div');
+            transactionItem.className = 'transaction-item';
+            transactionItem.dataset.transactionId = transaction.transactionId;
+
+            const leftWrapper = document.createElement('div');
+            leftWrapper.className = 'left-wrapper';
+            leftWrapper.style.display = 'flex';
+            leftWrapper.style.justifyContent = 'space-between';
+            leftWrapper.style.alignItems = 'center';
+            leftWrapper.style.width = '100%';
+
+            const transactionText = document.createElement('div');
+            transactionText.innerHTML = ` 
+                <strong>${transaction.transactionType}</strong>: ${transaction.date} - $${transaction.amount} - tId : ${transaction.transactionId}
+            `;
+            leftWrapper.appendChild(transactionText);
+
+            const expandButton = document.createElement('button');
+            expandButton.className = 'btn btn-primary';
+            expandButton.textContent = 'Expand';
+            expandButton.setAttribute('data-bs-target', `#transaction-details-${transaction.transactionId}`);
+            expandButton.setAttribute('data-bs-toggle', 'collapse');
+            leftWrapper.appendChild(expandButton);
+
+            const expandedDetails = document.createElement('div');
+            expandedDetails.className = 'collapse';
+            expandedDetails.id = `transaction-details-${transaction.transactionId}`;
+
+            const tableWrapper = document.createElement('div');
+            tableWrapper.className = 'table-wrapper';
+            tableWrapper.style.display = 'flex';
+            tableWrapper.style.justifyContent = 'flex-end';
+
+            const table = document.createElement('table');
+            table.className = 'transaction-table table table-bordered';
+            const tableHeader = `
+                <thead>
+                    <tr><th>Line ID</th><th>Account</th><th>Debit</th><th>Credit</th></tr>
+                </thead>
+            `;
+            table.innerHTML = tableHeader;
+
+            transaction.lines.forEach(line => {
+                const row = table.insertRow();
+                row.insertCell(0).innerText = line.lineId;
+                row.insertCell(1).innerText = line.account;
+
+                if (line.isCredit) {
+                    row.insertCell(2).innerText = '';
+                    row.insertCell(3).innerText = `$${line.amount}`;
+                } else {
+                    row.insertCell(2).innerText = `$${line.amount}`;
+                    row.insertCell(3).innerText = '';
+                }
+            });
+
+            tableWrapper.appendChild(table);
+            expandedDetails.appendChild(tableWrapper);
+
+            transactionItem.appendChild(leftWrapper);
+            transactionItem.appendChild(expandedDetails);
+
+            listElement.appendChild(transactionItem);
         });
-
-        // Append the minus button to the dropped transaction
-        droppedTransaction.appendChild(minusButton);
-
-        // Adjust the height of the Company 1 matched div (this simulates adding transactions)
-        company1TransactionDiv.style.height = `${company1TransactionDiv.offsetHeight + 60}px`;
-
-        updateReconcileButtonState(); // Update reconcile button state
     };
 
-    const handleDragOver = (event) => {
-        event.preventDefault();
-    };
 
-    centreDropZone.addEventListener('dragover', handleDragOver);
-    centreDropZone.addEventListener('drop', handleDrop);
 
-    // Fetch and render only unreconciled transactions
-    const unreconciledCompany1 = filterUnreconciledTransactions(fromCompanyTransaction);
-    const unreconciledCompany2 = filterUnreconciledTransactions(toCompanyTransaction);
-    
-    console.log(unreconciledCompany1);
-    console.log(unreconciledCompany2);
-
-    renderTransactionList(unreconciledCompany1, 'Company 1', company1List);
-    renderTransactionList(unreconciledCompany2, 'Company 2', company2List, true);
-
-    // Save the updated transactions to local storage
-    // localStorage.setItem('fromCompanyTransaction', JSON.stringify(fromCompanyTransaction));
-    // localStorage.setItem('toCompanyTransaction', JSON.stringify(toCompanyTransaction));
-}
 
 
 const selectTransactionFromCompany1 = (transactionElement) => {
@@ -706,6 +902,19 @@ function updateReconcileButtonState() {
         row.insertCell(1).innerText = transaction.amount;
         row.insertCell(2).innerText = transaction.isCredit ? 'Yes' : 'No';
     }
+
+
+    // switch tabs loading logic 
+
+    
+
+
+
+
+
+
+
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
