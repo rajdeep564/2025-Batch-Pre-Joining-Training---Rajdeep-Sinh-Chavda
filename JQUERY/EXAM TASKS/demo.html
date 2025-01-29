@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Reconciliation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .transaction-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .transaction-list {
+            border: 1px solid #ccc;
+            width: 30%;
+            min-height: 300px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .drop-zone {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            min-height: 300px;
+            width: 35%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .transaction-item {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .transaction-item.selected {
+            border: 2px solid green;
+        }
+        .draggable {
+            cursor: move;
+        }
+        .dropped-transaction {
+            background-color: #e9ecef;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        #clearSelectionBtn {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Transaction Reconciliation</h2>
+
+    <div class="transaction-container">
+        <div id="company1List" class="transaction-list">
+            <h4>Company 1</h4>
+            <button id="clearSelectionBtn" class="btn btn-secondary btn-sm">Clear Selection</button>
+            <!-- Company 1 transactions will be added here -->
+        </div>
+
+        <div id="dropZone" class="drop-zone">
+            <h4>Drag Transactions Here</h4>
+            <div id="droppedTransactions"></div>
+        </div>
+
+        <div id="company2List" class="transaction-list">
+            <h4>Company 2</h4>
+            <!-- Company 2 transactions will be added here -->
+        </div>
+    </div>
+
+    <button id="reconcileBtn" class="btn btn-primary mt-3" disabled>Reconcile</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Sample data (replace with your actual data fetching logic)
+    const company1Transactions = [
+        { id: 1, amount: 100, description: "Transaction 1" },
+        { id: 2, amount: 200, description: "Transaction 2" },
+        { id: 3, amount: 150, description: "Transaction 3" }
+    ];
+
+    const company2Transactions = [
+        { id: 4, amount: 100, description: "Transaction A" },
+        { id: 5, amount: 150, description: "Transaction B" },
+        { id: 6, amount: 50, description: "Transaction C" },
+        { id: 7, amount: 50, description: "Transaction D" }
+    ];
+
+    let selectedCompany1Transaction = null;
+    let droppedTransactions = [];
+
+    function renderTransactions() {
+        const company1List = document.getElementById('company1List');
+        const company2List = document.getElementById('company2List');
+
+        company1List.innerHTML = '<h4>Company 1</h4><button id="clearSelectionBtn" class="btn btn-secondary btn-sm">Clear Selection</button>';
+        company2List.innerHTML = '<h4>Company 2</h4>';
+
+        company1Transactions.forEach(transaction => {
+            const transactionElement = createTransactionElement(transaction, false);
+            company1List.appendChild(transactionElement);
+        });
+
+        company2Transactions.forEach(transaction => {
+            const transactionElement = createTransactionElement(transaction, true);
+            company2List.appendChild(transactionElement);
+        });
+
+        document.getElementById('clearSelectionBtn').addEventListener('click', clearSelection);
+    }
+
+    function createTransactionElement(transaction, isDraggable) {
+        const element = document.createElement('div');
+        element.className = `transaction-item ${isDraggable ? 'draggable' : ''}`;
+        element.textContent = `${transaction.description}: $${transaction.amount}`;
+        element.dataset.id = transaction.id;
+        element.dataset.amount = transaction.amount;
+
+        if (isDraggable) {
+            element.draggable = true;
+            element.addEventListener('dragstart', drag);
+        } else {
+            element.addEventListener('click', selectCompany1Transaction);
+        }
+
+        return element;
+    }
+
+    function selectCompany1Transaction() {
+        if (selectedCompany1Transaction) {
+            selectedCompany1Transaction.classList.remove('selected');
+        }
+        this.classList.add('selected');
+        selectedCompany1Transaction = this;
+        updateReconcileButton();
+    }
+
+    function clearSelection() {
+        if (selectedCompany1Transaction) {
+            selectedCompany1Transaction.classList.remove('selected');
+            selectedCompany1Transaction = null;
+            updateReconcileButton();
+        }
+    }
+
+    function drag(event) {
+        event.dataTransfer.setData('text/plain', event.target.dataset.id);
+    }
+
+    function allowDrop(event) {
+        event.preventDefault();
+    }
+
+    function drop(event) {
+        event.preventDefault();
+        const transactionId = event.dataTransfer.getData('text');
+        const draggedTransaction = company2Transactions.find(t => t.id == transactionId);
+
+        if (draggedTransaction && !droppedTransactions.some(t => t.id == transactionId)) {
+            addDroppedTransaction(draggedTransaction);
+            removeFromCompany2List(transactionId);
+            updateReconcileButton();
+        } else {
+            alert('This transaction has already been added or does not exist.');
+        }
+    }
+
+    function addDroppedTransaction(transaction) {
+        droppedTransactions.push(transaction);
+        const droppedTransactionsContainer = document.getElementById('droppedTransactions');
+        const transactionElement = document.createElement('div');
+        transactionElement.className = 'dropped-transaction';
+        transactionElement.innerHTML = `
+            ${transaction.description}: $${transaction.amount}
+            <button class="remove-btn" onclick="removeDroppedTransaction(${transaction.id})">×</button>
+        `;
+        droppedTransactionsContainer.appendChild(transactionElement);
+    }
+
+    function removeDroppedTransaction(id) {
+        droppedTransactions = droppedTransactions.filter(t => t.id != id);
+        const removedTransaction = company2Transactions.find(t => t.id == id);
+        if (removedTransaction) {
+            const company2List = document.getElementById('company2List');
+            company2List.appendChild(createTransactionElement(removedTransaction, true));
+        }
+        renderDroppedTransactions();
+        updateReconcileButton();
+    }
+
+    function removeFromCompany2List(id) {
+        const element = document.querySelector(`.transaction-item[data-id="${id}"]`);
+        if (element) {
+            element.remove();
+        }
+    }
+
+    function renderDroppedTransactions() {
+        const container = document.getElementById('droppedTransactions');
+        container.innerHTML = '';
+        droppedTransactions.forEach(transaction => {
+            const element = document.createElement('div');
+            element.className = 'dropped-transaction';
+            element.innerHTML = `
+                ${transaction.description}: $${transaction.amount}
+                <button class="remove-btn" onclick="removeDroppedTransaction(${transaction.id})">×</button>
+            `;
+            container.appendChild(element);
+        });
+    }
+
+    function updateReconcileButton() {
+        const reconcileBtn = document.getElementById('reconcileBtn');
+        if (selectedCompany1Transaction && droppedTransactions.length > 0) {
+            const company1Amount = parseFloat(selectedCompany1Transaction.dataset.amount);
+            const droppedAmount = droppedTransactions.reduce((sum, t) => sum + t.amount, 0);
+            reconcileBtn.disabled = company1Amount !== droppedAmount;
+        } else {
+            reconcileBtn.disabled = true;
+        }
+    }
+
+    function reconcile() {
+        if (selectedCompany1Transaction && droppedTransactions.length > 0) {
+            const company1Amount = parseFloat(selectedCompany1Transaction.dataset.amount);
+            const droppedAmount = droppedTransactions.reduce((sum, t) => sum + t.amount, 0);
+            
+            if (company1Amount === droppedAmount) {
+                alert('Transactions reconciled successfully!');
+                // Here you would typically update your data structures or send data to a server
+                clearReconciliation();
+            } else {
+                alert('Cannot reconcile. Amounts do not match.');
+            }
+        }
+    }
+
+    function clearReconciliation() {
+        selectedCompany1Transaction.remove();
+        droppedTransactions = [];
+        renderDroppedTransactions();
+        clearSelection();
+        updateReconcileButton();
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', () => {
+        renderTransactions();
+        document.getElementById('dropZone').addEventListener('dragover', allowDrop);
+        document.getElementById('dropZone').addEventListener('drop', drop);
+        document.getElementById('reconcileBtn').addEventListener('click', reconcile);
+    });
+</script>
+
+</body>
+</html>

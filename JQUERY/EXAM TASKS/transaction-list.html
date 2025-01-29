@@ -520,13 +520,14 @@ const renderTransactionList = (transactions, company, listElement, isDraggable =
             const expandButton = document.createElement('button');
             expandButton.className = 'btn btn-primary';
             expandButton.textContent = 'Expand';
-            expandButton.setAttribute('data-bs-target', `#transaction-details-${transaction.transactionId}`);
+            expandButton.setAttribute('data-bs-target', `#${company.toLowerCase().replace(' ', '-')}-${transaction.transactionId}`);
             expandButton.setAttribute('data-bs-toggle', 'collapse');
             leftWrapper.appendChild(expandButton);
 
             const expandedDetails = document.createElement('div');
             expandedDetails.className = 'collapse';
-            expandedDetails.id = `transaction-details-${transaction.transactionId}`;
+            // Directly prefix the company to make the ID unique
+            expandedDetails.id = `${company.toLowerCase().replace(' ', '-')}-${transaction.transactionId}`;
 
             const tableWrapper = document.createElement('div');
             tableWrapper.className = 'table-wrapper';
@@ -763,6 +764,7 @@ const checkReconcileButton = () => {
 
     // Check if there are any dropped transactions for Company 2 in the centre
     const droppedTransactions = document.getElementById('centreDropZone').querySelectorAll('.dropped-transaction');
+    console.log(droppedTransactions,"here ");
     if (droppedTransactions.length === 0) {
         document.getElementById('reconcileButton').disabled = true;
         return;
