@@ -1,179 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction Reconciliation</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
 
-    <style>
 
-        .tabs{
-            display: flex;
-            justify-content: space-between;
+let excludeSelectedTransactions = [];
 
-        }
+function logout(){
+    window.location.href = "index.html"; 
+    localStorage.clear(); // Clears all localStorage data
 
-        .transaction-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .transaction-list {
-            border: 1px solid #ccc;
-            width: 34%;
-            min-height: 300px;
-            padding: 10px;
-        }
-
-        .drop-zone {
-            border: 2px dashed #007bff;
-            border-radius: 10px;
-            min-height: 150px;
-            margin-top: 20px;
-            width: 40%;
-            margin: 10px;
-        }
-
-        #drophead{
-            opacity: 0.5;
-    font-weight: 100;
-    font-style: oblique;
-    display: flex
-;
-    justify-content: center;
-    position: relative;
-    top: 30px;
+}
 
 
-        }
+let currentPage = 1;
+     document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('jwt_token');
 
-     
-        .transaction-item {
-            flex-direction: column;
-            display: flex;
-            background-color: #f8f9fa;
-            padding: 10px;
-            margin-bottom: 10px;
-            cursor: move;
-            align-content: center;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
+    if (!token) {
+        window.location.href = "index.html"; // Redirect to login page
+    }
+    });
 
-        .expanded {
-            background-color: #e9ecef;
-            margin-top: 10px;
-        }
-
-        .transaction-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .transaction-table td, .transaction-table th {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        #loading {
-            display: none;
-        }
-
-        .btn_div{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h2 class="my-4">Transaction Reconciliation</h2>
-
-    <!-- Tabs Section -->
-    <div class="tabs">
-        <ul class="nav nav-tabs" id="transactionTabs">
-            <li class="nav-item">
-                <a class="nav-link active" id="unreconciledTab" >Unreconciled</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="reconciledTab" >Reconciled</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="excludeTab">Exclude</a>
-            </li>
-            
-        </ul>
-
-        <div class="btn_div">
-
-            <button id="reconcileButton" class="btn btn-success" disabled>
-                Reconcile
-            </button>
-
-            <!-- Exclude Button -->
-          
-
-    
-            <button id="logoutbtn" class="btn btn-danger" onclick="logout();">
-                Logout
-            </button>
-            <!-- Toast Container (hidden by default) -->
-<div id="toastContainer" class="position-fixed"></div>
-
-
-        </div>
-
-       
-        
-    </div>
-    
-
-    <div class="transaction-container">
-        <!-- Company 1 List -->
-        <div id="company1List" class="transaction-list">
-            
-            <h4>Company 1</h4>
-        </div>
-
-        <!-- Center Drop Zone -->
-        <div id="centreDropZone" class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h4 id="drophead">Drag transactions here</h4>
-        </div>
-
-        <!-- Company 2 List -->
-        <div id="company2List" class="transaction-list">
-            <h4>Company 2</h4>
-        </div>
-
-        
-        
-    </div>
-
-    <!-- Expanded Transaction Table -->
-    <div id="expandedTransaction" class="expanded"></div>
-
-    <!-- Loading Spinner -->
-    <div id="loading" class="text-center">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
-</div>
-
-<script>
+    window.addEventListener('storage', (event) => {
+    if (event.key === 'jwt_token' && !event.newValue) {
+        window.location.href = "index.html"; // Redirect to login page
+    }
+});
 
 
 function switchTab(tabName) {
     const tabs = ['unreconciled', 'reconciled', 'exclude'];
-    
+
     // Hide all tab content
     tabs.forEach(tab => {
         const tabContent = document.getElementById(`${tab}TabContent`);
@@ -200,13 +55,42 @@ function switchTab(tabName) {
         selectedTabLink.classList.add('active');
     }
 
+    // Log to see if the correct tabName is being passed
+    console.log(`Switching to tab: ${tabName}`);
+
     // Load the appropriate transactions for the selected tab
     if (tabName === 'reconciled') {
         loadReconciledTransactions();
-    } else {
-        loadUnreconciledTransactions(); // Load unreconciled transactions if tab is 'unreconciled'
+    } 
+    else if (tabName === 'exclude') {
+    // Log to confirm if we're entering the exclude block
+    console.log('Entering exclude tab');
+
+    // Ensure you have the necessary data, for example from local storage
+    const storedData = JSON.parse(localStorage.getItem('transactionsData')) || { fromCompanyTransaction: [], toCompanyTransaction: [] };
+    console.log('Stored Data:', storedData);
+
+    const company1List = document.getElementById('company1List');
+    const company2List = document.getElementById('company2List');
+
+    company1List.innerHTML = '';
+    company2List.innerHTML = '';
+
+    // Log to see if filtering transactions works
+    console.log('All fromCompanyTransaction:', storedData.fromCompanyTransaction);
+    console.log('All toCompanyTransaction:', storedData.toCompanyTransaction);
+
+    // Pass all transactions (without filtering by isExcluded) to showExcludedPageList
+    showExcludedPageList(storedData.fromCompanyTransaction, 'Company 1', company1List);
+    showExcludedPageList(storedData.toCompanyTransaction, 'Company 2', company2List);
+}
+
+
+    else {
+        loadTransactions();
     }
 }
+
 
 
 function loadUnreconciledTransactions() {
@@ -234,10 +118,23 @@ function loadReconciledTransactions() {
     const storedData = localStorage.getItem('transactionsData');
     if (storedData) {
         const data = JSON.parse(storedData);
-        showTransactionList(data.fromCompanyTransaction.filter(transaction => transaction.isReconciled), 'Company 1', company1List);
-        showTransactionList(data.toCompanyTransaction.filter(transaction => transaction.isReconciled), 'Company 2', company2List, true);
+
+        // Filter reconciled transactions, excluding those with isExcluded true
+        const reconciledCompany1 = data.fromCompanyTransaction.filter(transaction => transaction.isReconciled && !transaction.isExcluded);
+        const reconciledCompany2 = data.toCompanyTransaction.filter(transaction => transaction.isReconciled && !transaction.isExcluded);
+
+        // If no reconciled transactions are available
+        if (reconciledCompany1.length === 0 && reconciledCompany2.length === 0) {
+            company1List.innerHTML = 'NO DATA';
+            company2List.innerHTML = 'NO DATA';
+        } else {
+            // Display the reconciled transactions for each company
+            showTransactionList(reconciledCompany1, 'Company 1', company1List);
+            showTransactionList(reconciledCompany2, 'Company 2', company2List, true);
+        }
     }
 }
+
 
 // Function to load Excluded Transactions
 function loadExcludedTransactions() {
@@ -269,8 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-     let currentPage = 1;
-    const token = localStorage.getItem('jwt_token');
+   
+const token = localStorage.getItem('jwt_token');
 
     // Fetch transactions for the current page
     async function fetchTransactions(page) {
@@ -334,19 +231,28 @@ function renderTransactions(data) {
 
     const { fromCompanyTransaction, toCompanyTransaction } = data;
 
-    // Filter transactions to show only those that are not reconciled or do not have the isReconciled property
+    // Filter transactions to show only those that are not reconciled, not excluded, and do not have the isReconciled property
     const filterUnreconciledTransactions = (transactions) => {
-        return transactions.filter(transaction => !transaction.isReconciled);
+        return transactions.filter(transaction => !transaction.isReconciled && !transaction.isExcluded);
     };
 
     // Function to render transaction list for each company
-    
     // Handle drop event in the center zone
     const handleDrop = (event) => {
         event.preventDefault();
 
         // Get the dragged transaction data
         const transactionData = JSON.parse(event.dataTransfer.getData('text/plain'));
+
+        // Check if this transaction is already in the dropped transactions array
+        const alreadyDropped = draggedCompany2Transactions.some(
+            (item) => item.transactionId === transactionData.transactionId
+        );
+
+        if (alreadyDropped) {
+            alert('This transaction has already been added!');
+            return; // Stop further execution
+        }
 
         // Log the dropped transaction data
         console.log('Dropped Transaction Data:', transactionData);
@@ -367,7 +273,9 @@ function renderTransactions(data) {
         const selectedTransactionId = selectedTransactionDiv.dataset.transactionId;
 
         // Find the corresponding div in the center drop zone
-        const company1TransactionDiv = document.querySelector(`.company1-matched-transaction[data-transaction-id="${selectedTransactionId}"]`);
+        const company1TransactionDiv = document.querySelector(
+            `.company1-matched-transaction[data-transaction-id="${selectedTransactionId}"]`
+        );
         if (!company1TransactionDiv) {
             console.error('No corresponding div found in the center for selected Company 1 transaction');
             return;
@@ -388,7 +296,7 @@ function renderTransactions(data) {
 
         // Set the data-amount attribute correctly
         droppedTransaction.dataset.amount = transactionData.amount;
-        droppedTransaction.dataset.transactionId = transactionData.transactionId;  // <-- Correct this line
+        droppedTransaction.dataset.transactionId = transactionData.transactionId;
 
         // Log the data-amount attribute to confirm it's set
         console.log('Set data-amount for dropped transaction:', droppedTransaction.dataset.amount);
@@ -397,7 +305,7 @@ function renderTransactions(data) {
         company1TransactionDiv.appendChild(droppedTransaction);
 
         // Store the dropped transaction amount in the element to be used later
-        droppedTransaction.transactionData = transactionData;  // <-- Store the transaction data directly
+        droppedTransaction.transactionData = transactionData;
 
         // Create and add the minus button
         const minusButton = document.createElement('button');
@@ -409,7 +317,9 @@ function renderTransactions(data) {
             droppedTransaction.remove();
 
             // Remove the dragged transaction from the array
-            const index = draggedCompany2Transactions.findIndex(item => item.transactionId === transactionData.transactionId);
+            const index = draggedCompany2Transactions.findIndex(
+                (item) => item.transactionId === transactionData.transactionId
+            );
             if (index !== -1) {
                 draggedCompany2Transactions.splice(index, 1);
             }
@@ -433,12 +343,9 @@ function renderTransactions(data) {
     centreDropZone.addEventListener('dragover', handleDragOver);
     centreDropZone.addEventListener('drop', handleDrop);
 
-    // Fetch and render only unreconciled transactions
+    // Fetch and render only unreconciled and unexcluded transactions
     const unreconciledCompany1 = filterUnreconciledTransactions(fromCompanyTransaction);
     const unreconciledCompany2 = filterUnreconciledTransactions(toCompanyTransaction);
-    
-    console.log(unreconciledCompany1);
-    console.log(unreconciledCompany2);
 
     renderTransactionList(unreconciledCompany1, 'Company 1', company1List);
     renderTransactionList(unreconciledCompany2, 'Company 2', company2List, true);
@@ -449,37 +356,32 @@ function renderTransactions(data) {
 }
 
 
-
 //render transaction list
-
 const renderTransactionList = (transactions, company, listElement, isDraggable = false) => {
-
     const reconcileButton = document.getElementById('reconcileButton');
-        reconcileButton.style.display = 'block';
+    reconcileButton.style.display = 'block';
     const centreDropZone = document.getElementById('centreDropZone');
-        centreDropZone.style.display = 'block';
-        transactions.forEach(transaction => {
-            console.log(transaction);
-            if (!transaction.transactionId || !transaction.transactionType || !transaction.amount || !transaction.lines) {
-                console.error('Transaction is missing expected fields:', transaction);
-                return;
-            }
+    centreDropZone.style.display = 'block';
 
-            
+    transactions.forEach(transaction => {
+        if (!transaction.transactionId || !transaction.transactionType || !transaction.amount || !transaction.lines) {
+            console.error('Transaction is missing expected fields:', transaction);
+            return;
+        }
 
-            
+        const transactionItem = document.createElement('div');
+        transactionItem.className = 'transaction-item';
+        transactionItem.dataset.transactionId = transaction.transactionId;
 
-            const transactionItem = document.createElement('div');
-            transactionItem.className = 'transaction-item';
-            transactionItem.dataset.transactionId = transaction.transactionId;
+        if (company === 'Company 1') {
+            transactionItem.style.backgroundColor = '#f1f1f1'; // Light gray for Company 1
+        }
 
-            if (company === 'Company 1') {
-                transactionItem.style.backgroundColor = '#f1f1f1'; // Light gray for Company 1
-            }
-
-            // Add a click event to select the transaction from Company 1
-            if (company === 'Company 1') {
-                transactionItem.addEventListener('click', () => {
+        // Add a click event to select the transaction from Company 1
+        if (company === 'Company 1') {
+            transactionItem.addEventListener('click', (e) => {
+                // Only handle click event for selection if it's not the expand button
+                if (e.target && !e.target.classList.contains('expand-btn')) {
                     // Deselect previously selected transaction
                     const selectedItems = document.querySelectorAll('.transaction-item.selected');
                     selectedItems.forEach(item => {
@@ -504,96 +406,125 @@ const renderTransactionList = (transactions, company, listElement, isDraggable =
                         company1TransactionDiv.style.padding = '10px';
                         company1TransactionDiv.style.marginTop = '15px';
                         company1TransactionDiv.style.border = '1px solid #ccc';
+                        company1TransactionDiv.style.position = 'relative'; // Ensure relative positioning for the button
 
-                       
-
+                        // Label for selected transaction
                         const label = document.createElement('span');
                         label.className = 'company1-label';
                         label.textContent = `Company 1 Transaction ID: ${transaction.transactionId}`;
                         company1TransactionDiv.appendChild(label);
 
+                        // "Clear Selection" button
+                        const clearButton = document.createElement('button');
+                        clearButton.textContent = 'Clear';
+                        clearButton.className = 'clear-selection-btn';
+                        clearButton.style.marginLeft = '15px';
+                        clearButton.style.padding = '5px 10px';
+                        clearButton.style.backgroundColor = '#dc3545';
+                        clearButton.style.color = 'white';
+                        clearButton.style.border = 'none';
+                        clearButton.style.borderRadius = '4px';
+                        clearButton.style.cursor = 'pointer';
 
+                        // Event listener for clear button
+                        clearButton.addEventListener('click', () => {
+                            // Remove the selected transaction div from the center drop zone
+                            company1TransactionDiv.remove();
+
+                            // Deselect transaction from Company 1 list
+                            transactionItem.classList.remove('selected');
+                            transactionItem.style.border = 'none';
+
+                            // Clear the selected transaction variable
+                            selectedCompany1Transaction = null;
+                        });
+
+                        company1TransactionDiv.appendChild(clearButton);
+
+                        // Append to centre drop zone
                         centreDropZone.appendChild(company1TransactionDiv);
-                        const headingofcentrediv  = document.getElementById('drophead');
-                        headingofcentrediv.style.display = 'none'
+
+                        // Hide heading
+                        const headingofcentrediv = document.getElementById('drophead');
+                        headingofcentrediv.style.display = 'none';
                     }
 
                     updateReconcileButtonState();
-                });
-            }
-
-            // Handle draggable transactions for Company 2
-            if (isDraggable) {
-                transactionItem.draggable = true;
-                transactionItem.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', JSON.stringify(transaction));
-                });
-            }
-
-            const leftWrapper = document.createElement('div');
-            leftWrapper.className = 'left-wrapper';
-            leftWrapper.style.display = 'flex';
-            leftWrapper.style.justifyContent = 'space-between';
-            leftWrapper.style.alignItems = 'center';
-            leftWrapper.style.width = '100%';
-
-            const transactionText = document.createElement('div');
-            transactionText.innerHTML = ` 
-                <strong>${transaction.transactionType}</strong>: ${transaction.date} - $${transaction.amount} - tId : ${transaction.transactionId}
-            `;
-            leftWrapper.appendChild(transactionText);
-
-            const expandButton = document.createElement('button');
-            expandButton.className = 'btn btn-primary';
-            expandButton.textContent = 'Expand';
-            expandButton.setAttribute('data-bs-target', `#${company.toLowerCase().replace(' ', '-')}-${transaction.transactionId}`);
-            expandButton.setAttribute('data-bs-toggle', 'collapse');
-            leftWrapper.appendChild(expandButton);
-
-            const expandedDetails = document.createElement('div');
-            expandedDetails.className = 'collapse';
-            // Directly prefix the company to make the ID unique
-            expandedDetails.id = `${company.toLowerCase().replace(' ', '-')}-${transaction.transactionId}`;
-
-            const tableWrapper = document.createElement('div');
-            tableWrapper.className = 'table-wrapper';
-            tableWrapper.style.display = 'flex';
-            tableWrapper.style.justifyContent = 'flex-end';
-
-            const table = document.createElement('table');
-            table.className = 'transaction-table table table-bordered';
-            const tableHeader = `
-                <thead>
-                    <tr><th>Line ID</th><th>Account</th><th>Debit</th><th>Credit</th></tr>
-                </thead>
-            `;
-            table.innerHTML = tableHeader;
-
-            transaction.lines.forEach(line => {
-                const row = table.insertRow();
-                row.insertCell(0).innerText = line.lineId;
-                row.insertCell(1).innerText = line.account;
-
-                if (line.isCredit) {
-                    row.insertCell(2).innerText = '';
-                    row.insertCell(3).innerText = `$${line.amount}`;
-                } else {
-                    row.insertCell(2).innerText = `$${line.amount}`;
-                    row.insertCell(3).innerText = '';
                 }
             });
+        }
 
-            tableWrapper.appendChild(table);
-            expandedDetails.appendChild(tableWrapper);
+        // Handle draggable transactions for Company 2
+        if (isDraggable) {
+            transactionItem.draggable = true;
+            transactionItem.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', JSON.stringify(transaction));
+            });
+        }
 
-            transactionItem.appendChild(leftWrapper);
-            transactionItem.appendChild(expandedDetails);
+        const leftWrapper = document.createElement('div');
+        leftWrapper.className = 'left-wrapper';
+        leftWrapper.style.display = 'flex';
+        leftWrapper.style.justifyContent = 'space-between';
+        leftWrapper.style.alignItems = 'center';
+        leftWrapper.style.width = '100%';
 
-            listElement.appendChild(transactionItem);
+        const transactionText = document.createElement('div');
+        transactionText.innerHTML = ` 
+            <strong>${transaction.transactionType}</strong>: ${transaction.date} - $${transaction.amount} - tId : ${transaction.transactionId}
+        `;
+        leftWrapper.appendChild(transactionText);
+
+        const uniqueExpandId = `transaction-details-${company.replace(/\s+/g, '')}-${transaction.transactionId}`;
+
+        const expandButton = document.createElement('button');
+        expandButton.className = 'btn btn-primary expand-btn'; // Add a unique class to the button
+        expandButton.textContent = 'Expand';
+        expandButton.setAttribute('data-bs-target', `#${uniqueExpandId}`); // Use unique ID
+        expandButton.setAttribute('data-bs-toggle', 'collapse');
+        leftWrapper.appendChild(expandButton);
+
+        const expandedDetails = document.createElement('div');
+        expandedDetails.className = 'collapse';
+        expandedDetails.id = uniqueExpandId; // Assign unique ID
+
+        const tableWrapper = document.createElement('div');
+        tableWrapper.className = 'table-wrapper';
+        tableWrapper.style.display = 'flex';
+        tableWrapper.style.justifyContent = 'flex-end';
+
+        const table = document.createElement('table');
+        table.className = 'transaction-table table table-bordered';
+        const tableHeader = `
+            <thead>
+                <tr><th>Line ID</th><th>Account</th><th>Debit</th><th>Credit</th></tr>
+            </thead>
+        `;
+        table.innerHTML = tableHeader;
+
+        transaction.lines.forEach(line => {
+            const row = table.insertRow();
+            row.insertCell(0).innerText = line.lineId;
+            row.insertCell(1).innerText = line.account;
+
+            if (line.isCredit) {
+                row.insertCell(2).innerText = '';
+                row.insertCell(3).innerText = `$${line.amount}`;
+            } else {
+                row.insertCell(2).innerText = `$${line.amount}`;
+                row.insertCell(3).innerText = '';
+            }
         });
-    };
 
+        tableWrapper.appendChild(table);
+        expandedDetails.appendChild(tableWrapper);
 
+        transactionItem.appendChild(leftWrapper);
+        transactionItem.appendChild(expandedDetails);
+
+        listElement.appendChild(transactionItem);
+    });
+};
 
     // show transavtction list 
 
@@ -631,16 +562,18 @@ const renderTransactionList = (transactions, company, listElement, isDraggable =
             `;
             leftWrapper.appendChild(transactionText);
 
+            const uniqueExpandId = `transaction-details-${company.replace(/\s+/g, '')}-${transaction.transactionId}`;
+
             const expandButton = document.createElement('button');
             expandButton.className = 'btn btn-primary';
             expandButton.textContent = 'Expand';
-            expandButton.setAttribute('data-bs-target', `#transaction-details-${transaction.transactionId}`);
+            expandButton.setAttribute('data-bs-target', `#${uniqueExpandId}`); // Use unique ID
             expandButton.setAttribute('data-bs-toggle', 'collapse');
             leftWrapper.appendChild(expandButton);
 
             const expandedDetails = document.createElement('div');
             expandedDetails.className = 'collapse';
-            expandedDetails.id = `transaction-details-${transaction.transactionId}`;
+            expandedDetails.id = uniqueExpandId; // Assign unique ID
 
             const tableWrapper = document.createElement('div');
             tableWrapper.className = 'table-wrapper';
@@ -679,6 +612,225 @@ const renderTransactionList = (transactions, company, listElement, isDraggable =
             listElement.appendChild(transactionItem);
         });
     };
+
+    // Global array to track selected transactions for exclusion
+
+
+// Function to show excluded page list with checkboxes
+// Function to show excluded page list with checkboxes
+const showExcludedPageList = (transactions, company, listElement) => {
+    const centreDropZone = document.getElementById('centreDropZone');
+    centreDropZone.style.display = 'none';
+    
+    const reconcileButton = document.getElementById('reconcileButton');
+    reconcileButton.style.display = 'none';
+
+    // Loop through each transaction and create its checkbox
+    transactions.forEach(transaction => {
+        // Ensure the transaction object has an 'isExcluded' property
+        if (transaction.isExcluded === undefined) {
+            transaction.isExcluded = false; // Initialize if not defined
+        }
+        console.log(transaction);
+
+        // Create transaction item element
+        const transactionItem = document.createElement('div');
+        transactionItem.className = 'transaction-item';
+        transactionItem.dataset.transactionId = transaction.transactionId;
+
+        // Create left wrapper for the transaction
+        const leftWrapper = document.createElement('div');
+        leftWrapper.className = 'left-wrapper';
+        leftWrapper.style.display = 'flex';
+        leftWrapper.style.justifyContent = 'space-between';
+        leftWrapper.style.alignItems = 'center';
+        leftWrapper.style.width = '100%';
+
+        // Transaction text
+        const transactionText = document.createElement('div');
+        transactionText.innerHTML = `
+            <strong>${transaction.transactionType}</strong>: ${transaction.date} - $${transaction.amount} - tId : ${transaction.transactionId}
+        `;
+        leftWrapper.appendChild(transactionText);
+
+        // Create the exclusion checkbox for the transaction
+        const excludeCheckbox = document.createElement('input');
+        excludeCheckbox.type = 'checkbox';
+        excludeCheckbox.dataset.transactionId = transaction.transactionId;
+        excludeCheckbox.checked = transaction.isExcluded; // Set checkbox based on isExcluded property
+        leftWrapper.appendChild(excludeCheckbox);
+
+        // Add event listener to checkbox
+        excludeCheckbox.addEventListener('change', (e) => {
+            const transactionId = e.target.dataset.transactionId;
+            const isChecked = e.target.checked;
+
+            // Find the transaction by its ID and update 'isExcluded'
+            const transactionToUpdate = transactions.find(t => t.transactionId === transactionId);
+
+            if (transactionToUpdate) {
+                transactionToUpdate.isExcluded = isChecked;
+
+                // Save the updated transactions to local storage
+                const storedData = JSON.parse(localStorage.getItem('transactionsData')) || { fromCompanyTransaction: [], toCompanyTransaction: [] };
+                storedData.fromCompanyTransaction = transactions.filter(t => t.isExcluded);
+                storedData.toCompanyTransaction = transactions.filter(t => t.isExcluded);
+                localStorage.setItem('transactionsData', JSON.stringify(storedData));
+            }
+        });
+
+        // Add the expand button for showing details
+        const uniqueExpandId = `transaction-details-${company.replace(/\s+/g, '')}-${transaction.transactionId}`;
+        const expandButton = document.createElement('button');
+        expandButton.className = 'btn btn-primary';
+        expandButton.textContent = 'Expand';
+        expandButton.setAttribute('data-bs-target', `#${uniqueExpandId}`);
+        expandButton.setAttribute('data-bs-toggle', 'collapse');
+        leftWrapper.appendChild(expandButton);
+
+        // Transaction details (expandable section)
+        const expandedDetails = document.createElement('div');
+        expandedDetails.className = 'collapse';
+        expandedDetails.id = uniqueExpandId;
+
+        const tableWrapper = document.createElement('div');
+        tableWrapper.className = 'table-wrapper';
+        tableWrapper.style.display = 'flex';
+        tableWrapper.style.justifyContent = 'flex-end';
+
+        const table = document.createElement('table');
+        table.className = 'transaction-table table table-bordered';
+        const tableHeader = `
+            <thead>
+                <tr><th>Line ID</th><th>Account</th><th>Debit</th><th>Credit</th></tr>
+            </thead>
+        `;
+        table.innerHTML = tableHeader;
+
+        transaction.lines.forEach(line => {
+            const row = table.insertRow();
+            row.insertCell(0).innerText = line.lineId;
+            row.insertCell(1).innerText = line.account;
+
+            if (line.isCredit) {
+                row.insertCell(2).innerText = '';
+                row.insertCell(3).innerText = `$${line.amount}`;
+            } else {
+                row.insertCell(2).innerText = `$${line.amount}`;
+                row.insertCell(3).innerText = '';
+            }
+        });
+
+        tableWrapper.appendChild(table);
+        expandedDetails.appendChild(tableWrapper);
+
+        transactionItem.appendChild(leftWrapper);
+        transactionItem.appendChild(expandedDetails);
+
+        listElement.appendChild(transactionItem);
+    });
+};
+
+
+// Add an event listener for the Exclude button to apply changes
+document.addEventListener('DOMContentLoaded', () => {
+    // Add event listener to the parent element (for example, the document body or a container div)
+    document.body.addEventListener('change', (event) => {
+        // Check if the clicked element is a checkbox
+        if (event.target && event.target.type === 'checkbox') {
+            const checkbox = event.target;
+            const transactionId = checkbox.dataset.transactionId;
+            const isChecked = checkbox.checked;
+
+            console.log(`Processing checkbox for transactionId: ${transactionId}, checked: ${isChecked}`);
+
+            // Fetch the data from localStorage
+            let storedData = JSON.parse(localStorage.getItem('transactionsData')) || { fromCompanyTransaction: [], toCompanyTransaction: [] };
+            const { fromCompanyTransaction, toCompanyTransaction } = storedData;
+
+            // Convert transactionId to number if necessary
+            const transactionIdNum = Number(transactionId);
+
+            let transactionUpdated = false; // Flag to track if transaction is found and updated
+
+            // Check in fromCompanyTransaction array
+            const fromTransaction = fromCompanyTransaction.find(t => t.transactionId === transactionIdNum);
+            if (fromTransaction) {
+                fromTransaction.isExcluded = isChecked;
+                transactionUpdated = true;
+                console.log(`Updated isExcluded for transactionId ${transactionIdNum} in fromCompanyTransaction.`);
+            }
+
+            // If not found, check in toCompanyTransaction array
+            if (transactionUpdated) {
+                const toTransaction = toCompanyTransaction.find(t => t.transactionId === transactionIdNum);
+                if (toTransaction) {
+                    toTransaction.isExcluded = isChecked;
+                    transactionUpdated = true;
+                    console.log(`Updated isExcluded for transactionId ${transactionIdNum} in toCompanyTransaction.`);
+                }
+            }
+
+            // If no transaction is found in both arrays
+            if (!transactionUpdated) {
+                console.log(`Transaction with transactionId ${transactionIdNum} not found.`);
+            }
+
+            // Log the data before saving to ensure changes were made
+            console.log('Data before saving to localStorage:', storedData);
+
+            // After processing, save the updated storedData back to localStorage
+            try {
+                localStorage.setItem('transactionsData', JSON.stringify(storedData));
+                console.log('Successfully saved to localStorage');
+            } catch (e) {
+                console.error('Error saving to localStorage:', e);
+            }
+
+            // Show Bootstrap toast based on the checkbox action
+            const toastContainer = document.getElementById('toastContainer'); // Assuming you have a container for your toasts in HTML
+
+            // Create a new toast element
+            const toast = document.createElement('div');
+            toast.classList.add('toast', 'fade', 'show');
+            toast.style.minWidth = '200px';
+            toast.style.position = 'absolute';
+            toast.style.bottom = '10px';
+            toast.style.right = '10px';
+
+            toast.innerHTML = `
+                <div class="toast-body">
+                    ${isChecked ? `Transaction ${transactionId} marked as excluded.` : `Transaction ${transactionId} is no longer excluded.`}
+                </div>
+            `;
+
+            // Append toast to the container
+            toastContainer.appendChild(toast);
+
+            // Automatically remove the toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 500); // Remove the toast element after fade-out
+            }, 700); // Remove after 3 seconds
+
+            // Log to confirm the change is reflected in localStorage
+            const updatedStoredData = JSON.parse(localStorage.getItem('transactionsData'));
+            console.log('Updated Stored Data from localStorage:', updatedStoredData);
+        }
+    });
+});
+
+
+
+
+
+
+    // Save updated data back to local storage
+
+
+    // FOR EXCLUDED PAGE
+
 
 
 
@@ -790,7 +942,6 @@ const checkReconcileButton = () => {
 
     // Check if there are any dropped transactions for Company 2 in the centre
     const droppedTransactions = document.getElementById('centreDropZone').querySelectorAll('.dropped-transaction');
-    console.log(droppedTransactions,"here ");
     if (droppedTransactions.length === 0) {
         document.getElementById('reconcileButton').disabled = true;
         return;
@@ -878,9 +1029,9 @@ function updateReconcileButtonState() {
     // });
 
     // Start loading transactions when the page loads
-    document.addEventListener('DOMContentLoaded', () => {
-        loadTransactions();
-    });
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     loadTransactions();
+    // });
 
     // Function to handle drag events
     function drag(event) {
@@ -941,13 +1092,3 @@ function updateReconcileButtonState() {
 
 
 
-
-
-</script>
-
-<script src="script.js"></script>
-
-
-
-</body>
-</html>

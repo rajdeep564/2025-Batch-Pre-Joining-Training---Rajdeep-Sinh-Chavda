@@ -1,0 +1,87 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.transaction-list {
+  height: 500px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  padding: 10px;
+  background-color: #ffffff;
+}
+
+.transaction-item {
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s ease;
+  background-color: #f8f9fa;
+}
+
+.transaction-item:hover {
+  background-color: #e9ecef;
+}
+
+.transaction-item.selected {
+  background-color: #cce5ff;
+  border: 2px solid #007bff;
+}
+
+.drop-zone {
+  min-height: 50px;
+  border: 2px dashed #007bff;
+  border-radius: 0.25rem;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #e9ecef;
+}
+
+.transaction-details {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f1f3f5;
+  border-radius: 0.25rem;
+}
+
+.transaction-table {
+  width: 100%;
+}
+
+.transaction-table th,
+.transaction-table td {
+  padding: 5px;
+  text-align: left;
+}
+
+.dragged-transaction {
+  background-color: #ffffff;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.reconciled-pair {
+  border: 2px solid #28a745;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 0.25rem;
+}
+
+.excluded-transaction {
+  opacity: 0.5;
+}
+
+.transaction-item label {
+  display: inline-block;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.tabs_div{
+  display: flex;
+  justify-content: space-between;
+}
