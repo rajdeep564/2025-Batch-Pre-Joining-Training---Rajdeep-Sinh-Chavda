@@ -125,44 +125,61 @@ function renderTransactions(tabName) {
 
 function renderTransactionList(transactions, container, company, isDraggable = false) {
   transactions
-    .filter((transaction) => {
-      // Filter transactions where isExcluded is false or undefined
-      return transaction.isExcluded === false || transaction.isExcluded === undefined;
-    })
-    .forEach((transaction) => {
+    .filter(transaction => !transaction.isExcluded) // Filter out excluded transactions
+    .forEach(transaction => {
       const transactionItem = document.createElement("div");
-      transactionItem.className = "transaction-item";
+      transactionItem.className = "transaction-item d-flex flex-row gap-2"; // Parent container
       transactionItem.dataset.id = transaction.transactionId;
-      transactionItem.innerHTML = `
-        <div>
-            <strong>${transaction.transactionType}</strong>: $${transaction.amount}
+
+      // Wrapper for transaction details
+      const detailsWrapper = document.createElement("div");
+      detailsWrapper.className = "transaction-details-wrapper p-3 border rounded shadow-sm";
+    
+      detailsWrapper.innerHTML = `
+        <div class="transaction-info">
+            <strong class="transaction-type">${transaction.transactionType}</strong>: 
+            <span class="transaction-amount">$${transaction.amount}</span>
             <br>
-            Date: ${transaction.date} | ID: ${transaction.transactionId}
+            <span class="transaction-date">Date: ${transaction.date}</span> | 
+            <span class="transaction-id">ID: ${transaction.transactionId}</span>
         </div>
-        <button class="btn btn-sm btn-outline-primary mt-2" onclick="toggleDetails(${transaction.transactionId})">
+        <button class="btn btn-sm btn-outline-primary mt-2 toggle-btn"
+                onclick="toggleDetails('${company}-${transaction.transactionId}')">
             Toggle Details
         </button>
-        <div id="details-${transaction.transactionId}" class="transaction-details"></div>
+        <div id="details-${company}-${transaction.transactionId}" class="transaction-details mt-2"></div>
       `;
 
-      if (company === "Company 1") {
-        const dropZone = document.createElement("div");
-        dropZone.className = "drop-zone";
-        dropZone.dataset.id = transaction.transactionId;
-        dropZone.innerHTML = "<p>Drop matching transactions here</p>";
-        dropZone.addEventListener("dragover", allowDrop);
-        dropZone.addEventListener("drop", drop);
-        transactionItem.appendChild(dropZone);
-      }
+      transactionItem.appendChild(detailsWrapper);
 
+      // Make item draggable
       if (isDraggable && !transaction.isReconciled) {
         transactionItem.draggable = true;
         transactionItem.addEventListener("dragstart", drag);
       }
 
+      // Drop zone (only for Company 1)
+      if (company === "Company 1") {
+        const dropZone = document.createElement("div");
+        dropZone.className = "drop-zone p-3 border-dashed rounded text-center mt-2";
+        dropZone.dataset.id = transaction.transactionId; // FIX: Ensuring dataset ID is correctly set
+        dropZone.innerHTML = "<p class='m-0'>Drop matching transactions here</p>";
+
+        // Ensure event listeners are properly added
+        dropZone.addEventListener("dragover", allowDrop);
+        dropZone.addEventListener("drop", drop);
+
+        transactionItem.appendChild(dropZone);
+      }
+
+      if (company === "Company 2") {
+        
+      }
+
       container.appendChild(transactionItem);
     });
 }
+
 function renderReconciledTransactions(container) {
   const reconciledPairs = transactions.fromCompanyTransaction
     .filter((t) => t.isReconciled && (t.isExcluded === false || t.isExcluded === undefined))
@@ -261,46 +278,59 @@ function toggleExclude(transactionId) {
   toastr.success(`Transaction ${transactionId} ${transactions.isExcluded ? "excluded" : "included"}`)
 }
 
-function toggleDetails(transactionId) {
-  const detailsElement = document.getElementById(`details-${transactionId}`)
+function toggleDetails(uniqueId) {
+  const detailsElement = document.getElementById(`details-${uniqueId}`);
+  console.log("Unique ID:", uniqueId);
+  if (!detailsElement) return;
+
   if (detailsElement.style.display === "none" || detailsElement.style.display === "") {
-    const transaction = [...transactions.fromCompanyTransaction, ...transactions.toCompanyTransaction].find(
-      (t) => t.transactionId === transactionId,
-    )
+    // Extract company and transactionId from the uniqueId
+    const [company, transactionIdStr] = uniqueId.split("-");
+    const transactionId = Number(transactionIdStr); // Convert to number
+
+    // Find the transaction from the correct company
+    const transaction =
+      company === "Company1"
+        ? transactions.fromCompanyTransaction.find((t) => t.transactionId === transactionId)
+        : transactions.toCompanyTransaction.find((t) => t.transactionId === transactionId);
+
+    console.log("Extracted Transaction ID:", transactionId);
+    console.log("Found Transaction:", transaction);
 
     if (transaction) {
       detailsElement.innerHTML = `
-                <table class="transaction-table">
-                    <thead>
-                        <tr>
-                            <th>Line ID</th>
-                            <th>Account</th>
-                            <th>Amount</th>
-                            <th>Is Credit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${transaction.lines
-                          .map(
-                            (line) => `
-                            <tr>
-                                <td>${line.lineId}</td>
-                                <td>${line.account}</td>
-                                <td>$${line.amount}</td>
-                                <td>${line.isCredit ? "Yes" : "No"}</td>
-                            </tr>
-                        `,
-                          )
-                          .join("")}
-                    </tbody>
-                </table>
-            `
-      detailsElement.style.display = "block"
+        <table class="transaction-table">
+            <thead>
+                <tr>
+                    <th>Line ID</th>
+                    <th>Account</th>
+                    <th>Amount</th>
+                    <th>Is Credit</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${transaction.lines
+                  .map(
+                    (line) => `
+                    <tr>
+                        <td>${line.lineId}</td>
+                        <td>${line.account}</td>
+                        <td>$${line.amount}</td>
+                        <td>${line.isCredit ? "Yes" : "No"}</td>
+                    </tr>
+                `,
+                  )
+                  .join("")}
+            </tbody>
+        </table>
+      `;
+      detailsElement.style.display = "block";
     }
   } else {
-    detailsElement.style.display = "none"
+    detailsElement.style.display = "none";
   }
 }
+
 
 function allowDrop(ev) {
   ev.preventDefault()
