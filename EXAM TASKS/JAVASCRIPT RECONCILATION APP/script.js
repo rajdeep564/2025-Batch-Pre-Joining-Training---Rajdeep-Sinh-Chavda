@@ -4,6 +4,8 @@ let transactions = {
 };
 let draggedTransactions = {};
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("jwt_token");
   if (!token) {
@@ -80,52 +82,59 @@ async function fetchTransactionsFromAPI() {
       isReconciled: false,
     }));
 
-    localStorage.setItem("transactions", JSON.stringify(transactions))
-    renderTransactions("unreconciled")
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+    renderTransactions("unreconciled");
   } catch (error) {
-    console.error("Error:", error)
-    toastr.error("Error loading transactions")
+    console.error("Error:", error);
+    toastr.error("Error loading transactions");
   }
 }
 
 function renderTransactions(tabName) {
-  const company1List = document.getElementById("company1List")
-  const company2List = document.getElementById("company2List")
-  const reconciledTransactions = document.getElementById("reconciledTransactions")
-  const excludedTransactions = document.getElementById("excludedTransactions")
+  const company1List = document.getElementById("company1List");
+  const company2List = document.getElementById("company2List");
+  const reconciledTransactions = document.getElementById("reconciledTransactions");
+  const excludedTransactions = document.getElementById("excludedTransactions");
 
-  company1List.innerHTML = ""
-  company2List.innerHTML = ""
-  reconciledTransactions.innerHTML = ""
-  excludedTransactions.innerHTML = ""
+  company1List.innerHTML = "";
+  company2List.innerHTML = "";
+  reconciledTransactions.innerHTML = "";
+  excludedTransactions.innerHTML = "";
 
   const filterTransactions = (transaction) => {
     switch (tabName) {
       case "unreconciled":
-        return !transaction.isReconciled && !transaction.isExcluded
+        return !transaction.isReconciled && !transaction.isExcluded;
       case "reconciled":
-        return transaction.isReconciled && !transaction.isExcluded
+        return transaction.isReconciled && !transaction.isExcluded;
       case "excluded":
-        return true // Show all transactions in the excluded tab
+        return true; //show all
     }
   }
 
-  const company1Transactions = transactions.fromCompanyTransaction.filter(filterTransactions)
-  const company2Transactions = transactions.toCompanyTransaction.filter(filterTransactions)
+  const company1Transactions = transactions.fromCompanyTransaction.filter(filterTransactions);
+  const company2Transactions = transactions.toCompanyTransaction.filter(filterTransactions);
 
   if (tabName === "unreconciled") {
-    renderTransactionList(company1Transactions, company1List, "Company 1")
-    renderTransactionList(company2Transactions, company2List, "Company 2", true)
+    renderTransactionList(company1Transactions, company1List, "Company 1");
+    renderTransactionList(company2Transactions, company2List, "Company 2", true);
+    const reconcileBtn = document.getElementById('reconcileBtn');
+    reconcileBtn.style.display = 'flex';
   } else if (tabName === "reconciled") {
-    renderReconciledTransactions(reconciledTransactions)
+    const reconcileBtn = document.getElementById('reconcileBtn');
+    reconcileBtn.style.display = 'none';
+
+    renderReconciledTransactions(reconciledTransactions);
   } else {
-    renderExcludedTransactions(excludedTransactions)
+    renderExcludedTransactions(excludedTransactions);
+    const reconcileBtn = document.getElementById('reconcileBtn');
+    reconcileBtn.style.display = 'none';
   }
 }
 
 function renderTransactionList(transactions, container, company, isDraggable = false) {
   transactions
-    .filter(transaction => !transaction.isExcluded) // Filter out excluded transactions
+    // .filter(transaction => !transaction.isExcluded) // Filter out excluded transactions
     .forEach(transaction => {
       const transactionItem = document.createElement("div");
       transactionItem.className = "transaction-item d-flex  gap-2"; // Parent container
@@ -222,25 +231,25 @@ function renderReconciledTransactions(container) {
 }
 
 function renderExcludedTransactions(container) {
-  // Combine both company transactions, but first tag each with their source
+ // spread and modify
   const fromCompanyTransactions = transactions.fromCompanyTransaction.map(t => ({
     ...t,
-    companyId: 'company1'  // Explicitly set company ID for first company
+    companyId: 'company1'  // Explicitly set company ID 
   }));
   
   const toCompanyTransactions = transactions.toCompanyTransaction.map(t => ({
     ...t,
-    companyId: 'company2'  // Explicitly set company ID for second company
+    companyId: 'company2'  // Explicitly set company ID 
   }));
 
   // Now combine the tagged transactions
   const allTransactions = [...fromCompanyTransactions, ...toCompanyTransactions];
 
-  // Create the parent container
+ 
   const rowContainer = document.createElement("div");
   rowContainer.className = "row";
 
-  // Loop through and create transaction items
+
   allTransactions.forEach((transaction) => {
     const transactionItem = document.createElement("div");
     transactionItem.className = "col-6";
@@ -383,21 +392,21 @@ function toggleDetails(uniqueId) {
 
 
 function allowDrop(ev) {
-  ev.preventDefault()
+  ev.preventDefault();
 }
 
 function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.dataset.id)
+  ev.dataTransfer.setData("text", ev.target.dataset.id);
 }
 
 function drop(ev) {
-  ev.preventDefault()
-  const draggedId = ev.dataTransfer.getData("text")
-  const dropZoneId = ev.target.closest(".drop-zone").dataset.id
+  ev.preventDefault();
+  const draggedId = ev.dataTransfer.getData("text");
+  const dropZoneId = ev.target.closest(".drop-zone").dataset.id;
 
   if (draggedId && dropZoneId) {
-    const draggedTransaction = transactions.toCompanyTransaction.find((t) => t.transactionId == draggedId)
-    const dropZoneTransaction = transactions.fromCompanyTransaction.find((t) => t.transactionId == dropZoneId)
+    const draggedTransaction = transactions.toCompanyTransaction.find((t) => t.transactionId == draggedId);
+    const dropZoneTransaction = transactions.fromCompanyTransaction.find((t) => t.transactionId == dropZoneId);
 
     if (draggedTransaction && dropZoneTransaction) {
       if (
@@ -414,17 +423,17 @@ function drop(ev) {
       }
 
       if (!draggedTransactions[dropZoneId]) {
-        draggedTransactions[dropZoneId] = []
+        draggedTransactions[dropZoneId] = [];
       }
       draggedTransactions[dropZoneId].push(draggedTransaction)
-      updateDropZone(dropZoneId)
-      updateReconcileButtonState()
+      updateDropZone(dropZoneId);
+      updateReconcileButtonState();
     }
   }
 }
 
 function updateDropZone(transactionId) {
-  const dropZone = document.querySelector(`.drop-zone[data-id="${transactionId}"]`)
+  const dropZone = document.querySelector(`.drop-zone[data-id="${transactionId}"]`);
   if (dropZone) {
     dropZone.innerHTML = `
             <p>Dragged Transactions:</p>
@@ -441,77 +450,76 @@ function updateDropZone(transactionId) {
               )
               .join("")}
         `
+        // console.log(draggedTransactions); // yeh objects of array isme trId matlab argument me dropzoneId jayegi to us key pe pura array hoga 
   }
 }
 
 function removeDraggedTransaction(dropZoneId, transactionId) {
-  draggedTransactions[dropZoneId] = draggedTransactions[dropZoneId].filter((t) => t.transactionId != transactionId)
-  updateDropZone(dropZoneId)
-  updateReconcileButtonState()
+  draggedTransactions[dropZoneId] = draggedTransactions[dropZoneId].filter((t) => t.transactionId != transactionId);
+  updateDropZone(dropZoneId);
+  updateReconcileButtonState();
 }
 
 function updateReconcileButtonState() {
-  const reconcileBtn = document.getElementById("reconcileBtn")
-  reconcileBtn.disabled = Object.keys(draggedTransactions).length === 0
+  const reconcileBtn = document.getElementById("reconcileBtn");
+  reconcileBtn.disabled = Object.keys(draggedTransactions).length === 0;
 }
 
 function reconcileTransactions() {
-  for (const [company1Id, company2Transactions] of Object.entries(draggedTransactions)) {
-    const company1Transaction = transactions.fromCompanyTransaction.find((t) => t.transactionId == company1Id)
-    const totalAmount = company2Transactions.reduce((sum, t) => sum + t.amount, 0)
-
-    if (company1Transaction.amount === totalAmount) {
-      company1Transaction.isReconciled = true
-      company2Transactions.forEach((t) => {
-        t.isReconciled = true
-        t.reconciledWith = company1Transaction.transactionId
-      })
-    } else {
-      toastr.error("Amounts do not match for some transactions. Please check and try again.")
-      return
-    }
+    // console.log(draggedTransactions);
+    for (const [company1Id, company2Transactions] of Object.entries(draggedTransactions)) {
+      console.log("Processing Company 1 Transaction ID:", company1Id);
+      console.log("Dragged Transactions:", draggedTransactions);
+      console.log("Company 2 Transactions for this Company 1 ID:", company2Transactions);
+  
+      const company1Transaction = transactions.fromCompanyTransaction.find((t) => t.transactionId == company1Id);
+      console.log("Matching Company 1 Transaction:", company1Transaction);
+  
+      const totalAmount = company2Transactions.reduce((sum, t) => sum + t.amount, 0);
+      console.log("Total Amount from Company 2 Transactions:", totalAmount);
+  
+      if (company1Transaction.amount === totalAmount) {
+          console.log("Amounts match! Marking transactions as reconciled.");
+  
+          company1Transaction.isReconciled = true;
+          console.log("Updated Company 1 Transaction:", company1Transaction);
+  
+          company2Transactions.forEach((t) => {
+              t.isReconciled = true;
+              t.reconciledWith = company1Transaction.transactionId;
+              console.log("Updated Company 2 Transaction:", t);
+          });
+      } else {
+          console.error("Amounts do not match for Company 1 ID:", company1Id);
+          toastr.error("Amounts do not match for some transactions. Please check and try again.");
+          return;
+      }
   }
+  
 
-  localStorage.setItem("transactions", JSON.stringify(transactions))
-  draggedTransactions = {}
-  renderTransactions("unreconciled")
-  toastr.success("Transactions reconciled successfully")
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+  draggedTransactions = {};
+  renderTransactions("unreconciled");
+  toastr.success("Transactions reconciled successfully");
 }
 
 function undoReconcile(transactionId) {
-  const company1Transaction = transactions.fromCompanyTransaction.find((t) => t.transactionId == transactionId)
+  const company1Transaction = transactions.fromCompanyTransaction.find((t) => t.transactionId == transactionId);
   if (company1Transaction) {
-    company1Transaction.isReconciled = false
+    company1Transaction.isReconciled = false;
     transactions.toCompanyTransaction.forEach((t) => {
       if (t.reconciledWith === transactionId) {
-        t.isReconciled = false
-        t.reconciledWith = null
+        t.isReconciled = false;
+        t.reconciledWith = null;
       }
     })
-    localStorage.setItem("transactions", JSON.stringify(transactions))
-    renderTransactions("reconciled")
-    toastr.success("Reconciliation undone successfully")
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+    renderTransactions("reconciled");
+    toastr.success("Reconciliation undone successfully");
   }
 }
 
 function switchTab(tabName) {
-  renderTransactions(tabName)
+  renderTransactions(tabName);
 }
 
-// toastr.options = {
-//   "closeButton": false,
-//   "debug": false,
-//   "newestOnTop": false,
-//   "progressBar": false,
-//   "positionClass": "toast-top-right",
-//   "preventDuplicates": false,
-//   "onclick": null,
-//   "showDuration": "300",
-//   "hideDuration": "1000",
-//   "timeOut": "5000",
-//   "extendedTimeOut": "1000",
-//   "showEasing": "swing",
-//   "hideEasing": "linear",
-//   "showMethod": "fadeIn",
-//   "hideMethod": "fadeOut"
-// }
