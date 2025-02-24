@@ -1,0 +1,144 @@
+2.db.Products.find({Category : "Footwear"})
+
+3.db.Products.find({Price : {$gt:100}})
+
+4.db.Products.updateOne({_id: ObjectId('67ad9497ac453315409dbb18')},{$inc :{Price :10 }})
+
+5.db.Products.updateMany({Name : "Honorable"},{$push : {Sizes : 'XXL'}})
+
+6.db.Products.find({Name : "Honorable"})
+
+7.db.Products.deleteOne({Name : "Honorable"})
+
+8.db.Products.find({ $where: "this.Sizes.length > 3"})
+
+9.db.Products.find({"Discount.DiscountPercentage" : {$gt : 20}})
+
+10.db.Products.find({"Inventory.StockQuantity" : {$lt : 50}})
+
+11.db.Products.find({Discount : {$exists : false}})
+
+12.db.Products.find({"Inventory.WarehouseLocation" : {$regex : '^A'}})
+
+13.db.Products.find({Sizes : {$in : ['X']}})
+
+14.db.Products.aggregate([{$group : {_id:null,totalstock : {$sum : "$Inventory.StockQuantity"} }}])
+
+15.db.Products.aggregate([
+  {
+    $match: { Category: "Electronics" } 
+  },
+  {
+    $group: {
+      _id: null,
+      avgPrice: { $avg: "$Price" }
+    }
+  }
+]);
+
+16.db.Products.aggregate([
+  {
+    $group: {
+      _id: "$Category",
+      maxPrice: { $max: "$Price" }
+    }
+  }
+]);
+
+17.db.Products.aggregate([
+  {
+    $group: {
+      _id: "$Category",
+      productCount: { $sum: 1 }
+    }
+  }
+]);
+
+18.db.Products.aggregate([
+  {
+    $sort: { Price: -1 } 
+  },
+  {
+    $limit: 3 // Keep only top 3
+  }
+]);
+
+19.db.Products.aggregate([
+  { 
+    $group: { 
+      _id: "$Category", 
+      totalRevenue: { $sum: { $multiply: ["$Price", "$Inventory.StockQuantity"] } } 
+    } 
+  }
+]);
+
+20.db.Products.insertMany([
+  {
+    Name: "Gaming Mouse",
+    Price: 59.99,
+    Category: "Electronics",
+    Sizes: [],
+    Inventory: { StockQuantity: 100, WarehouseLocation: "F2-Storage" },
+    Discount: { DiscountPercentage: 10, ValidUntil: "2025-06-30T23:59:59Z" }
+  },
+  {
+    Name: "Leather Wallet",
+    Price: 29.99,
+    Category: "Accessories",
+    Sizes: [],
+    Inventory: { StockQuantity: 200, WarehouseLocation: "G3-Storage" },
+    Discount: { DiscountPercentage: 5, ValidUntil: "2024-12-31T23:59:59Z" }
+  },
+  {
+    Name: "Bluetooth Speaker",
+    Price: 89.99,
+    Category: "Electronics",
+    Sizes: [],
+    Inventory: { StockQuantity: 50, WarehouseLocation: "H1-Storage" },
+    Discount: { DiscountPercentage: 15, ValidUntil: "2025-03-01T23:59:59Z" }
+  }
+]);
+
+21.db.Products.updateMany({}, { $set: { Brand: "Generic Brand" } });
+
+22.db.Products.deleteMany({ Category: "Accessories" });
+
+26.db.Products.find({
+  $or: [
+    { "Discount.DiscountPercentage": { $gt: 25 } },
+    { "Inventory.StockQuantity": { $lt: 10 } }
+  ]
+});
+
+27.db.Products.find({
+  "Discount.ValidUntil": { 
+    $lt: new Date(new Date().getTime() + 7*24*60*60*1000).toISOString()  
+  }
+})
+
+28.db.Products.find({
+  "Discount.DiscountPercentage": { $gt: 0 },
+  "Inventory.StockQuantity": { $gt: 0 },
+  Price: { $gt: 50 }
+});
+
+29.db.Products.find({
+  Sizes: { $ne: [] }, 
+  "Discount.DiscountPercentage": { $gt: 0 }
+});
+
+30.db.Products.aggregate([
+  {
+    $group: {
+      _id: "$Name",  
+      uniqueWarehouses: { $addToSet: "$Inventory.WarehouseLocation" }  
+    }
+  },
+  {
+    $match: { 
+      $expr: { $gt: [{ $size: "$uniqueWarehouses" }, 1] } 
+    }
+  }
+]);
+
+

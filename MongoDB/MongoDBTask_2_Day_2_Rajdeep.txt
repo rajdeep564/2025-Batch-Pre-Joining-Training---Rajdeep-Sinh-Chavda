@@ -1,0 +1,311 @@
+// 1
+
+db.createCollection("teachers")
+
+db.runCommand({
+  collMod: "teachers",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      title: "Teachers Schema",
+      required: ["teacher_id", "first_name", "last_name", "age", "subjects"], 
+      properties: {
+        teacher_id: { bsonType: "int", description: "Must be an integer." },
+        first_name: { bsonType: "string", description: "Must be a string." },
+        last_name: { bsonType: "string", description: "Must be a string." },
+        age: { bsonType: "int", minimum: 22, maximum: 65, description: "Between 22 and 65." },
+        salary: { 
+          bsonType: ["int", "double", "null"],  // Now allows both int and double
+          description: "Optional, must be an integer or double if provided." 
+        },
+        is_active: { bsonType: ["bool", "null"], description: "Optional, true if active." },
+        joining_date: { bsonType: ["date", "null"], description: "Optional, must be a valid date." },
+        subjects: {
+          bsonType: "array",
+          minItems: 1,
+          description: "At least one subject required.",
+          items: {
+            bsonType: "object",
+            required: ["name"],
+            properties: {
+              name: { bsonType: "string", description: "Subject name required." },
+              code: { bsonType: ["string", "null"], description: "Optional subject code." }
+            }
+          }
+        },
+        address: {
+          bsonType: ["object", "null"],
+          description: "Optional address",
+          properties: {
+            street: { bsonType: ["string", "null"], description: "Optional street name." },
+            city: { bsonType: ["string", "null"], description: "Optional city name." },
+            state: { bsonType: ["string", "null"], description: "Optional state name." }
+          }
+        }
+      }
+    }
+  }
+});
+
+
+db.teachers.insertMany([
+  {
+    teacher_id: 1,
+    first_name: "Jaydeep",
+    last_name: "Changani",
+    age: 35,
+    salary: 55000.00,  
+    is_active: false,  
+    joining_date: new Date("2015-09-20"),  
+    subjects: [{ name: "Computer Science", code: "CS01" }],  
+    address: { street: "MG Road", city: "Rajkot", state: "Gujarat" }
+  },
+  {
+    teacher_id: 2,
+    first_name: "Rajdeep",
+    last_name: "Chavda",
+    age: 45,
+    salary: 75000, 
+    is_active: true,  
+    joining_date: new Date("2010-06-15"),  
+    subjects: [{ name: "Mathematics", code: "MATH01" }],  
+    address: { street: "Ring Road", city: "Surat", state: "Gujarat" }
+  },
+  {
+    teacher_id: 3,
+    first_name: "Harsh",
+    last_name: "Singh",
+    age: 29,
+    salary: 48000.50,  
+    is_active: true,  
+    joining_date: new Date("2018-02-10"),  
+    subjects: [{ name: "Physics", code: "PHY01" }],  
+    address: { street: "SG Highway", city: "Ahmedabad", state: "Gujarat" }
+  },
+  {
+    teacher_id: 4,
+    first_name: "Aditya",
+    last_name: "Raje",
+    age: 30,
+    salary: null,  
+    is_active: true,  
+    joining_date: new Date("2017-07-05"),  
+    subjects: [{ name: "Chemistry", code: "CHE02" }],  
+    address: { street: "VIP Road", city: "Vadodara", state: "Gujarat" }
+  },
+  {
+    teacher_id: 5,
+    first_name: "Sujal",
+    last_name: "Patel",
+    age: 40,
+    salary: 60000,  // Integer (Now allowed)
+    is_active: true,  
+    joining_date: new Date("2012-08-10"),  
+    subjects: [{ name: "English", code: "ENG01" }],  
+    address: { street: "Alkapuri", city: "Ahmedabad", state: "Gujarat" }
+  }
+]);
+
+db.runCommand({
+  collMod: "teachers",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      title: "Teachers Schema",
+      required: ["teacher_id", "first_name", "last_name", "age", "subjects"], 
+      properties: {
+        teacher_id: { bsonType: "int", description: "Must be an integer." },
+        first_name: { bsonType: "string", description: "Must be a string." },
+        last_name: { bsonType: "string", description: "Must be a string." },
+        age: { bsonType: "int", minimum: 22, maximum: 65, description: "Between 22 and 65." },
+        salary: { bsonType: ["double","int", "null"], description: "Optional, must be a double if provided." },
+        is_active: { bsonType: ["bool", "null"], description: "Optional, true if active." },
+        joining_date: { bsonType: ["date", "null"], description: "Optional, must be a valid date." },
+        subjects: {
+          bsonType: "array",
+          minItems: 1,
+          description: "At least one subject required.",
+          items: {
+            bsonType: "object",
+            required: ["name"],
+            properties: {
+              name: { bsonType: "string", description: "Subject name required." },
+              code: { bsonType: ["string", "null"], description: "Optional subject code." }
+            }
+          }
+        },
+        address: {
+          bsonType: ["object", "null"],
+          description: "Optional address",
+          properties: {
+            street: { bsonType: ["string", "null"], description: "Optional street name." },  
+            city: { bsonType: ["string", "null"], description: "Optional city name." },
+            state: { bsonType: ["string", "null"], description: "Optional state name." },
+            pincode: { bsonType: ["int", "null"], minimum: 100000, maximum: 999999, description: "6-digit pincode required if provided." }  // NEW FIELD ADDED
+          }
+        }
+      }
+    }
+  },
+  validationAction: "error" // This will enforce strict validation and reject invalid documents
+});
+
+// run in cmd 2
+
+mongodump --db Day2Tasks --out="C:\Users\User 05\Desktop\Rajdeep Sinh\2025-Batch-Pre-Joining-Training---Rajdeep-Sinh-Chavda\MongoDB"
+
+mongorestore "C:\Users\User 05\Desktop\Rajdeep Sinh\2025-Batch-Pre-Joining-Training---Rajdeep-Sinh-Chavda\MongoDB"
+
+mongoexport --db=Day2Tasks --collection=teachers --out="C:\Users\User 05\Desktop\Rajdeep Sinh\2025-Batch-Pre-Joining-Training---Rajdeep-Sinh-Chavda\MongoDB\teachers.json"
+
+mongoimport --db=Day2Tasks --collection=teachersa --file="C:\Users\User 05\Desktop\Rajdeep Sinh\2025-Batch-Pre-Joining-Training---Rajdeep-Sinh-Chavda\MongoDB\teachers_import.json" --jsonArray
+
+
+//3 4 and 5
+
+use calculations;
+
+db.numbers.insertMany([
+  { _id: 1, value: 10, category: "A", status: "active", score: 85, createdAt: new Date("2023-01-10") },
+  { _id: 2, value: 25, category: "B", status: "inactive", score: 65, createdAt: new Date("2023-02-15") },
+  { _id: 3, value: 40, category: "A", status: "active", score: 90, createdAt: new Date("2023-03-20") },
+  { _id: 4, value: 55, category: "C", status: "inactive", score: 45, createdAt: new Date("2023-04-05") },
+  { _id: 5, value: 75, category: "B", status: "active", score: 70, createdAt: new Date("2023-05-25") },
+  { _id: 6, value: 90, category: "C", status: "active", score: 95, createdAt: new Date("2023-06-30") }
+]);
+
+
+// Find Active Categories with an Average Score Above 70
+db.numbers.aggregate([
+  { $match: { status: "active" } },  // Only active records
+  { $group: { _id: "$category", avgScore: { $avg: "$score" } } }, // Calculate avg score
+  { $match: { avgScore: { $gt: 70 } } }, // Keep only categories with avgScore > 70
+  { $sort: { avgScore: -1 } } // Sort by highest avgScore
+]);
+
+//Count Documents Per Category and Show Only Category & Count
+db.numbers.aggregate([
+  { $group: { _id: "$category", totalRecords: { $sum: 1 } } },
+  { $project: { _id: 0, category: "$_id", totalRecords: 1 } } // Rename `_id` to `category`
+]);
+
+//Find Top 2 Most Frequent Categories with Total Score and Limit Results
+db.numbers.aggregate([
+  { $group: { _id: "$category", totalCount: { $sum: 1 }, totalScore: { $sum: "$score" } } },
+  { $sort: { totalScore: -1 } }, // Sort by highest total score
+  { $limit: 2 } // Show only top 2 categories
+]);
+
+
+
+const page = 2; 
+const pageSize = 3;
+
+db.numbers.aggregate([
+  { $sort: { createdAt: -1 } }, 
+  { $skip: (page - 1) * pageSize }, 
+  { $limit: pageSize } 
+]);
+
+
+//with facet 
+const page = 2;
+const pageSize = 2;
+
+db.products.aggregate([
+  {
+    $facet: {
+      "Total Count": [{ $count: "total" }], 
+      "Paginated Results": [
+        { $sort: { price: -1 } }, 
+        { $skip: (page - 1) * pageSize }, 
+        { $limit: pageSize } 
+      ]
+    }
+  }
+]);
+
+
+
+//replication
+
+Create three folders: in mongodb
+rs0-1
+rs0-2
+rs0-3
+
+//first instance primary
+mongod --replSet rs0 --bind_ip localhost --port 27017 --dbpath "C:\Users\User 05\Desktop\Rajdeep Sinh\2025-Batch-Pre-Joining-Training---Rajdeep-Sinh-Chavda\MongoDB\rs0-1"
+
+// second 
+mongod --replSet rs0 --bind_ip localhost --port 27018 --dbpath "C:\Users\User 05\Desktop\Rajdeep Sinh\2025-Batch-Pre-Joining-Training---Rajdeep-Sinh-Chavda\MongoDB\rs0-2"
+
+// third
+mongod --replSet rs0 --bind_ip localhost --port 27018 --dbpath "C:\Users\User 05\Desktop\Rajdeep Sinh\2025-Batch-Pre-Joining-Training---Rajdeep-Sinh-Chavda\MongoDB\rs0-2"
+
+//initialize replica set 
+mongosh --port 27017
+
+//now in mongosh
+rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "localhost:27017" },
+    { _id: 1, host: "localhost:27018" },
+    { _id: 2, host: "localhost:27019" }
+  ]
+})
+
+//verify
+rs.status()
+
+
+
+//transaction 
+
+const session = db.getMongo().startSession(); // Start a session
+session.startTransaction(); // Start a transaction
+
+try {
+    const employees = session.getDatabase("company").employees;
+    
+    
+    employees.updateOne(
+        { _id: 101 },
+        { $inc: { salary: 5000 } },
+        { session }
+    );
+
+ 
+    const payroll = session.getDatabase("company").payroll;
+    payroll.insertOne(
+        { employeeId: 101, amount: 5000, date: new Date() },
+        { session }
+    );
+
+    session.commitTransaction(); 
+    console.log("Transaction committed successfully!");
+} catch (error) {
+    session.abortTransaction(); 
+    console.log("Transaction aborted due to an error:", error);
+} finally {
+    session.endSession(); 
+}
+
+//index 
+
+db.teachers.createIndex({ name: 1 })
+
+db.teachers.createIndex({ age: 1, name: -1 })
+
+db.teachers.getIndexes()
+
+db.teachers.dropIndex("name_1")
+
+
+
+
+
+
+
+

@@ -55,18 +55,44 @@
 
 // example - 6
 
-function checkNum(num){
-    if(!isNaN){
-        if(num<0){
-            console.log("num is negative");
-        }
-        else if(num>0){
-            console.log("num is positive");
+// function checkNum(num){
+//     if(!isNaN){
+//         if(num<0){
+//             console.log("num is negative");
+//         }
+//         else if(num>0){
+//             console.log("num is positive");
     
-        }
-        else{
-            console.log("num is zero");
-        }
-    }
+//         }
+//         else{
+//             console.log("num is zero");
+//         }
+//     }
     
+// }
+
+// let arr = [1,2,3,4];
+// let arr2 = arr;
+// console.log(arr2);
+
+// // console.log(this.arr);
+
+let a = {
+    name :"rajdeep",
+    age :12
+}
+
+let b = a;
+
+b.name = "pppp";
+
+
+
+if(null == undefined){
+    console.log(b);
+    console.log(a);
+}
+
+if(1===2){
+    console.log("asdfdsf");
 }
