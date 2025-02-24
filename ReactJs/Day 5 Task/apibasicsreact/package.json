@@ -1,5 +1,5 @@
 {
-  "name": "productapp",
+  "name": "apibasicsreact",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,20 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "antd": "^5.24.1",
-    "bcryptjs": "^3.0.2",
-    "jsonwebtoken": "^9.0.2",
-    "lucide-react": "^0.475.0",
+    "antd": "^5.24.2",
+    "axios": "^1.7.9",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.2.0",
-    "sweetalert2": "^11.17.2"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.19.0",
     "eslint-plugin-react-hooks": "^5.0.0",
