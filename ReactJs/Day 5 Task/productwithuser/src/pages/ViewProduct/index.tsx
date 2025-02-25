@@ -1,53 +1,66 @@
 import React, { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Typography, Button, Empty } from "antd";
+import { Table, Typography, Button, Empty } from "antd";
 import { Product } from "../Products";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const ViewProduct: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  
   const product = useMemo(() => {
     const products = JSON.parse(localStorage.getItem("products") || "[]");
     return products.find((p: Product) => p.id === Number(id));
   }, [id]);
 
+
+  const columns = [
+    {
+      title: "Property",
+      dataIndex: "property",
+      key: "property",
+      render: (text: string) => <strong>{text}</strong>,
+    },
+    {
+      title: "Value",
+      dataIndex: "value",
+      key: "value",
+    },
+  ];
+
+
+  const dataSource = product
+    ? [
+        { key: "1", property: "ID", value: product.id },
+        { key: "2", property: "Name", value: product.name },
+        { key: "3", property: "Price", value: `₹${product.price}` },
+        { key: "4", property: "Category", value: product.category },
+      ]
+    : [];
+
   return (
-    <div style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "50px" }}>
+      <Title level={3} style={{ textAlign: "center", marginBottom: "20px" }}>
+        Product Details
+      </Title>
+
       {product ? (
-        <Card
-          style={{
-            width: "90%",
-            maxWidth: "500px",
-            boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-            borderRadius: "10px",
-            padding: "20px",
-          }}
-          bordered={false}
-        >
-          <Title level={3} style={{ textAlign: "center", marginBottom: "20px" }}>
-            Product Details
-          </Title>
-          <p>
-            <Text strong>ID:</Text> {product.id}
-          </p>
-          <p>
-            <Text strong>Name:</Text> {product.name}
-          </p>
-          <p>
-            <Text strong>Price:</Text> ₹{product.price}
-          </p>
-          <p>
-            <Text strong>Category:</Text> {product.category}
-          </p>
+        <>
+          <Table
+            columns={columns}
+            dataSource={dataSource}
+            pagination={false}
+            bordered
+            style={{ width: "50%", minWidth: "400px", overflowX:scroll}}
+          />
           <Button
             type="primary"
             block
             onClick={() => navigate("/products")}
             style={{
-              marginTop: "15px",
+              marginTop: "20px",
               fontSize: "16px",
               borderRadius: "6px",
               padding: "10px",
@@ -60,12 +73,9 @@ const ViewProduct: React.FC = () => {
           >
             Back to Products
           </Button>
-        </Card>
+        </>
       ) : (
-        <Empty
-          description="Product Not Found"
-          style={{ textAlign: "center" }}
-        />
+        <Empty description="Product Not Found" style={{ textAlign: "center" }} />
       )}
     </div>
   );

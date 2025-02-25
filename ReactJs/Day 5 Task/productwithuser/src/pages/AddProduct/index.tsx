@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Typography, Card, notification } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -6,13 +6,15 @@ import { PlusOutlined } from "@ant-design/icons";
 const { Title } = Typography;
 
 const AddProduct: React.FC = () => {
+  
   const navigate = useNavigate();
-  const [form] = Form.useForm();
+  
+  const [isLoading,setIsLoading] = useState(false);
 
   const handleSubmit = useCallback(
     (values: { name: string; price: string; category: string }) => {
       const { name, price, category } = values;
-
+  
       if (!name || !price || !category) {
         notification.error({
           message: "Validation Error",
@@ -20,7 +22,7 @@ const AddProduct: React.FC = () => {
         });
         return;
       }
-
+  
       if (parseFloat(price) <= 0) {
         notification.error({
           message: "Invalid Price",
@@ -28,30 +30,37 @@ const AddProduct: React.FC = () => {
         });
         return;
       }
-
-      const products = JSON.parse(localStorage.getItem("products") || "[]");
-      const newProduct = {
-        id: Date.now(),
-        name,
-        price,
-        category,
-      };
-
-      localStorage.setItem("products", JSON.stringify([...products, newProduct]));
-
-      notification.success({
-        message: "Product Added",
-        description: `"${name}" has been successfully added.`,
-        placement: "topRight",
-      });
-
-      setTimeout(() => navigate("/products"), 1000); // Redirect after 1s
+  
+      setIsLoading(true); 
+  
+      setTimeout(() => {
+        const products = JSON.parse(localStorage.getItem("products") || "[]");
+        const newProduct = {
+          id: Date.now(),
+          name,
+          price,
+          category,
+        };
+  
+        localStorage.setItem("products", JSON.stringify([...products, newProduct]));
+  
+        notification.success({
+          message: "Product Added",
+          description: `"${name}" has been successfully added.`,
+          placement: "topRight",
+        });
+  
+        navigate("/products"); 
+      }, 1000); 
     },
     [navigate]
   );
+  
 
   return (
+    
     <div style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
+      
       <Card
         style={{ width: "90%", maxWidth: "600px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
         bordered={false}
@@ -59,7 +68,7 @@ const AddProduct: React.FC = () => {
         <Title level={3} style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}>
           <PlusOutlined /> Add New Product
         </Title>
-        <Form form={form} onFinish={handleSubmit} layout="vertical">
+        <Form  onFinish={handleSubmit} layout="vertical">
           <Form.Item
             label="Product Name"
             name="name"
@@ -88,9 +97,11 @@ const AddProduct: React.FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" block>
-              Add Product
-            </Button>
+          <Button type="primary" htmlType="submit" size="large" block disabled={isLoading}>
+  {isLoading ? "Loading..." : "Add Product"}
+</Button>
+
+            
           </Form.Item>
         </Form>
       </Card>

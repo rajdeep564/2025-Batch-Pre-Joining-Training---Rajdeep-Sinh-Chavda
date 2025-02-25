@@ -31,7 +31,7 @@ const Register: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <Card style={styles.card} bordered={false}>
+      <Card style={styles.card} >
         <Title level={2} style={styles.title}>Create an Account</Title>
         <Text type="secondary" style={styles.subtitle}>Join us today!</Text>
 

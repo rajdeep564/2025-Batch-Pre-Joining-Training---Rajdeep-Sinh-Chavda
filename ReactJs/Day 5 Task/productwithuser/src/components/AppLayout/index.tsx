@@ -37,7 +37,7 @@ const AppLayout: React.FC = () => {
         {/* Main Content Area */}
         <Content
           style={{
-            margin: "20px",
+            
             padding: "24px",
             background: "#fff",
             borderRadius: "8px",

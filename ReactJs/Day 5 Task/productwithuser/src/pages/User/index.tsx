@@ -6,17 +6,17 @@ import moment from "moment";
 const { Title } = Typography;
 
 const Users: React.FC = () => {
-  const [users, setUsers] = useState<{ name: string; email: string; registeredAt: string }[]>([]);
+  const [users, setUsers] = useState<{ name: string; email: string;  }[]>([]);
 
   useEffect(() => {
-    // Fetch users from local storage
+    
     const storedUsers = localStorage.getItem("users");
     if (storedUsers) {
       setUsers(JSON.parse(storedUsers));
     }
   }, []);
 
-  // Table columns with formatted registration date
+
   const columns = [
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "Email", dataIndex: "email", key: "email" },

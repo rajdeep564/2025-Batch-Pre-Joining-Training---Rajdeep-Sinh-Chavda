@@ -16,13 +16,13 @@ const router = createBrowserRouter([
   { path: "/register", element: <Register /> },
   {
     path: "/",
-    element: <ProtectedRoute />, // ✅ Only authenticated users can access this
+    element: <ProtectedRoute />, 
     children: [
       {
         path: "/",
-        element: <AppLayout />, // ✅ Navbar + Sidebar Wrapper
+        element: <AppLayout />, 
         children: [
-          { path: "", element: <Products /> },
+          { index:true, element: <Products /> },
           { path: "products", element: <Products /> },
           { path: "add-product", element: <AddProduct /> },
           { path: "view-product/:id", element: <ViewProduct /> },
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { path: "*", element: <NotFound /> }, // ✅ 404 Page
+  { path: "*", element: <NotFound /> },
 ]);
 
 const App: React.FC = () => {

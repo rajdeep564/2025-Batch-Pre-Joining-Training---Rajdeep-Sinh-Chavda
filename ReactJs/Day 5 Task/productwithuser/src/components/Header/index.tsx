@@ -37,7 +37,7 @@ const AppHeader: React.FC = () => {
   return (
     <Header
       style={{
-        position: "sticky",
+        position: "fixed",
         top: 0,
         zIndex: 1000,
         width: "100%",

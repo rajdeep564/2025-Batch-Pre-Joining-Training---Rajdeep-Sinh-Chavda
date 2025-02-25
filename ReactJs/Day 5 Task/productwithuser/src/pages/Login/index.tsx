@@ -7,17 +7,17 @@ import { SignJWT } from "jose";
 
 const { Title, Text } = Typography;
 
-// Secret key for JWT (should be stored securely in a backend)
+
 const SECRET_KEY = new TextEncoder().encode(
   "a9d0baf35b6eca8c6664af58722afa050f623bf11470e0dbba05d6786b194d4da5e56d68cee5bfd8f73736bce11be2938a5d8ea070824a362dcf51f04fbc4a6ebeeb6c0eb26317ef9d7e1b1bf8d4289c2d87666e8150bbb040d552c7fd3f791168855584b99c4f492ec2dbf19a0ecdd69afc34e0e5d38be0174c67c14c813f55"
 );
 
-// Generate JWT token
+
 const generateToken = async (payload: any) => {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("1h") // Token expires in 1 hour
+    .setExpirationTime("1h") 
     .sign(SECRET_KEY);
 };
 
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
   const onFinish = async (values: any) => {
     setLoading(true);
 
-    // Fetch users from local storage
+ 
     const users = JSON.parse(localStorage.getItem("users") || "[]");
     const user = users.find((u: any) => u.email === values.email);
 
@@ -38,17 +38,17 @@ const Login: React.FC = () => {
       return;
     }
 
-    // Check password
+    
     if (!bcrypt.compareSync(values.password, user.password)) {
       message.error("Incorrect password!");
       setLoading(false);
       return;
     }
 
-    // Generate JWT token
+ 
     const jwtToken = await generateToken({ email: user.email, name: user.name });
 
-    // Store token in local storage
+  
     localStorage.setItem("authToken", jwtToken);
 
     message.success("Login successful! Redirecting...");
@@ -59,7 +59,7 @@ const Login: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <Card style={styles.card} bordered={false}>
+      <Card style={styles.card} >
         <Title level={2} style={styles.title}>
           Welcome Back 👋
         </Title>

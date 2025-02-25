@@ -8,7 +8,7 @@ const { Title } = Typography;
 const EditProduct: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [form] = Form.useForm();
+  
 
   const products = JSON.parse(localStorage.getItem("products") || "[]");
   const product = products.find((p: Product) => p.id === Number(id));
@@ -62,7 +62,7 @@ const EditProduct: React.FC = () => {
           Edit Product
         </Title>
         <Form
-          form={form}
+         
           initialValues={{
             name: product?.name,
             price: product?.price?.toString(),
