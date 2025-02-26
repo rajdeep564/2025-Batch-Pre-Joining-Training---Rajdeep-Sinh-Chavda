@@ -9,10 +9,10 @@ const { Title } = Typography;
 const CartPage: React.FC = () => {
   const { state, removeFromCart, incrementQuantity, decrementQuantity, clearCart } = useCart();
 
-  // Handle clear cart action and display success message
+
   const handleClearCart = () => {
-    clearCart();  // Clear the cart from the context
-    message.success("All items have been removed from your cart.");  // Show success message
+    clearCart(); 
+    message.success("All items have been removed from your cart."); 
   };
 
   return (
@@ -32,14 +32,14 @@ const CartPage: React.FC = () => {
         <ShoppingCart size={30} /> Shopping Cart
       </Title>
 
-      {/* If cart is empty */}
+      
       {state.cart.length === 0 ? (
         <Title level={4} style={{ textAlign: "center", color: "#888" }}>
           Your cart is empty
         </Title>
       ) : (
         <div>
-          {/* Display cart items */}
+          
           {state.cart.map((item) => (
             <CartItemComponent
               key={item.id}
@@ -52,7 +52,7 @@ const CartPage: React.FC = () => {
         </div>
       )}
 
-      {/* Show the Clear Cart button if cart is not empty */}
+      
       {state.cart.length > 0 && (
         <Card
           style={{

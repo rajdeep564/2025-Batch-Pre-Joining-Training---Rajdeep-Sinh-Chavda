@@ -1,20 +1,8 @@
-import { Dispatch } from "react";
-
-export interface CartContextType {
-  state: CartState;
-  addToCart: (product: CartItem) => void;
-  removeFromCart: (productId: number) => void;
-  incrementQuantity: (productId: number) => void;
-  decrementQuantity: (productId: number) => void;
-  clearCart: () => void;
-}
-
 export interface CartItem {
-  id: number;
+  id: string;
   name: string;
   price: number;
   quantity: number;
-  image: string;
 }
 
 export interface CartState {
@@ -28,35 +16,25 @@ export enum CartActionTypes {
   INCREMENT_QUANTITY = "INCREMENT_QUANTITY",
   DECREMENT_QUANTITY = "DECREMENT_QUANTITY",
   CLEAR_CART = "CLEAR_CART",
-}
-
-interface AddToCartAction {
-  type: CartActionTypes.ADD_TO_CART;
-  payload: CartItem;
-}
-
-interface RemoveFromCartAction {
-  type: CartActionTypes.REMOVE_FROM_CART;
-  payload: number;
-}
-
-interface IncrementQuantityAction {
-  type: CartActionTypes.INCREMENT_QUANTITY;
-  payload: number;
-}
-
-interface DecrementQuantityAction {
-  type: CartActionTypes.DECREMENT_QUANTITY;
-  payload: number;
-}
-
-interface ClearCartAction {
-  type: CartActionTypes.CLEAR_CART;
+  UPDATE_PRODUCTS_IN_CART = "UPDATE_PRODUCTS_IN_CART",
+  DELETE_PRODUCT = "DELETE_PRODUCT",
 }
 
 export type CartAction =
-  | AddToCartAction
-  | RemoveFromCartAction
-  | IncrementQuantityAction
-  | DecrementQuantityAction
-  | ClearCartAction;
+  | { type: CartActionTypes.ADD_TO_CART; payload: CartItem }
+  | { type: CartActionTypes.REMOVE_FROM_CART; payload: string }
+  | { type: CartActionTypes.INCREMENT_QUANTITY; payload: string }
+  | { type: CartActionTypes.DECREMENT_QUANTITY; payload: string }
+  | { type: CartActionTypes.CLEAR_CART }
+  | { type: CartActionTypes.UPDATE_PRODUCTS_IN_CART; payload: CartItem[] }
+  | { type: CartActionTypes.DELETE_PRODUCT; payload: string };
+
+export interface CartContextType {
+  state: CartState;
+  addToCart: (product: CartItem) => void;
+  removeFromCart: (productId: string) => void;
+  incrementQuantity: (productId: string) => void;
+  decrementQuantity: (productId: string) => void;
+  clearCart: () => void;
+  deleteProductFromCart: (productId: string) => void;
+}

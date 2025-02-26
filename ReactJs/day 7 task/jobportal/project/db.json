@@ -1,0 +1,103 @@
+{
+  "users": [
+    {
+      "name": "RajdeepSingh",
+      "email": "rajdeepsinghchavda7@gmail.com",
+      "password": "rajdeep@1",
+      "role": "user",
+      "createdAt": "2025-02-26T06:32:21.378Z",
+      "id": 1
+    },
+    {
+      "name": "Admin",
+      "email": "admin@example.com",
+      "password": "admin@123",
+      "role": "admin",
+      "createdAt": "2025-02-26T06:38:25.687Z",
+      "id": 2
+    },
+    {
+      "name": "mansi1111",
+      "email": "mn20@gmail.com",
+      "password": "123456",
+      "role": "user",
+      "createdAt": "2025-02-26T10:40:23.501Z",
+      "id": 3
+    }
+  ],
+  "jobs": [
+    {
+      "id": "1",
+      "title": "Senior React Developer",
+      "description": "We are looking for an experienced React developer...",
+      "salary": 120000,
+      "location": "New York, NY",
+      "type": "Full-time",
+      "category": "Development",
+      "company": "Tech Corp",
+      "createdAt": "2024-02-20T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "title": "Junior Backend Developer",
+      "description": "We are looking for a junior backend developer...",
+      "salary": 80000,
+      "location": "San Francisco, CA",
+      "type": "Full-time",
+      "category": "Development",
+      "company": "Innovatech",
+      "createdAt": "2024-03-15T00:00:00.000Z"
+    }
+  ],
+  "applications": [
+    {
+      "jobId": "2",
+      "userId": 1,
+      "status": "rejected",
+      "appliedAt": "2025-02-26T07:00:00.000Z",
+      "id": 2
+    },
+    {
+      "jobId": "1",
+      "userId": 2,
+      "status": "pending",
+      "appliedAt": "2025-02-26T07:54:40.893Z",
+      "id": 3
+    },
+    {
+      "jobId": "1",
+      "userId": 1,
+      "status": "pending",
+      "appliedAt": "2025-02-26T13:16:47.599Z",
+      "id": 4
+    }
+  ],
+  "removedApplications": [
+    {
+      "jobId": "1",
+      "userId": 1,
+      "status": "pending",
+      "appliedAt": "2025-02-26T06:32:39.169Z",
+      "id": 1,
+      "job": {
+        "id": "1",
+        "title": "Senior React Developer",
+        "description": "We are looking for an experienced React developer...",
+        "salary": 120000,
+        "location": "New York, NY",
+        "type": "Full-time",
+        "category": "Development",
+        "company": "Tech Corp",
+        "createdAt": "2024-02-20T00:00:00.000Z"
+      },
+      "user": {
+        "name": "RajdeepSingh",
+        "email": "rajdeepsinghchavda7@gmail.com",
+        "password": "rajdeep@1",
+        "role": "user",
+        "createdAt": "2025-02-26T06:32:21.378Z",
+        "id": 1
+      }
+    }
+  ]
+}

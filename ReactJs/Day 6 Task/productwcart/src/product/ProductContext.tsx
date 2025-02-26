@@ -20,7 +20,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     error: null,
   });
 
-  // 🔹 Fetch products from local storage (or initialize from JSON)
+
   const fetchProducts = () => {
     dispatch({ type: ProductActionTypes.FETCH_PRODUCTS_REQUEST });
 
@@ -38,7 +38,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
-  // 🔹 Add product and update local storage
+
   const addProduct = (newProduct: Omit<Product, "id">) => {
     const productWithId = {
       ...newProduct,
@@ -52,14 +52,14 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     dispatch({ type: ProductActionTypes.ADD_PRODUCT, payload: productWithId });
   };
 
-  // ✅ Live Update: Update product in both products list and cart
+ 
   const updateProduct = (id: string, updatedProduct: Product) => {
     const updatedProducts = state.products.map((product) =>
       product.id === id ? { ...updatedProduct, id } : product
     );
     localStorage.setItem("products", JSON.stringify(updatedProducts));
 
-    // 🔹 Live Update: Update product in the cart
+
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const updatedCart = cart.map((item: Product) =>
       item.id === id ? { ...updatedProduct, id } : item
@@ -68,11 +68,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     dispatch({ type: ProductActionTypes.EDIT_PRODUCT, payload: updatedProduct });
 
-    // 🔹 Notify other components of the update
+   
     window.dispatchEvent(new Event("storage"));
   };
 
-  // ✅ Live Deletion: Delete product from both products list and cart
+
   const deleteProduct = (id: string) => {
     dispatch({ type: ProductActionTypes.FETCH_PRODUCTS_REQUEST });
 
@@ -87,7 +87,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       dispatch({ type: ProductActionTypes.DELETE_PRODUCT, payload: id });
 
-      // 🔹 Notify other components of the update
+  
       window.dispatchEvent(new Event("storage"));
 
       setTimeout(() => {
@@ -101,7 +101,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     fetchProducts();
 
-    // ✅ Listen for storage updates (ensures real-time sync)
+
     const handleStorageChange = () => {
       fetchProducts();
     };

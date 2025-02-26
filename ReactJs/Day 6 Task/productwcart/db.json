@@ -1,0 +1,67 @@
+[
+    {
+      "id": "1",
+      "name": "iPhone 14",
+      "category": "Phones",
+      "price": 50000,
+      "description": "Latest Apple smartphone",
+      "image": "iphone.png"
+    },
+    {
+      "id": "2",
+      "name": "Samsung Galaxy S23",
+      "category": "Phones",
+      "price": 37000,
+      "description": "Latest Samsung smartphone",
+      "image": "samsung.png"
+    },
+    {
+      "id": "3",
+      "name": "OnePlus 11",
+      "category": "Phones",
+      "price": 45000,
+      "description": "Flagship OnePlus phone with Snapdragon 8 Gen 2",
+      "image": "oneplus11.png"
+    },
+    {
+      "id": "4",
+      "name": "Google Pixel 8",
+      "category": "Phones",
+      "price": 55000,
+      "description": "The latest Google smartphone with advanced AI features",
+      "image": "pixel8.png"
+    },
+    {
+      "id": "5",
+      "name": "Men's Cotton T-Shirt",
+      "category": "Clothes",
+      "price": 999,
+      "description": "Comfortable cotton t-shirt for men",
+      "image": "menstshirt.png"
+    },
+    {
+      "id": "6",
+      "name": "Harry Potter Book Set",
+      "category": "Books",
+      "price": 1200,
+      "description": "Complete set of Harry Potter books",
+      "image": "harrypotterbook.png"
+    },
+    {
+      "id": "7",
+      "name": "Running Shoes",
+      "category": "Shoes",
+      "price": 3000,
+      "description": "Durable running shoes with advanced cushioning",
+      "image": "runningshoes.png"
+    },
+    {
+      "id": "8",
+      "name": "Bluetooth Headphones",
+      "category": "Electronics",
+      "price": 2500,
+      "description": "Noise-cancelling Bluetooth headphones with 20 hours of battery life.",
+      "image": "bluetoothheadphones.png"
+    }
+  ]
+  

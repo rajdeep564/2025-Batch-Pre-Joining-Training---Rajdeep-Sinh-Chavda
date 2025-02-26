@@ -1,85 +1,65 @@
 import React, { createContext, useReducer, useContext, ReactNode, useEffect } from "react";
 import { CartState, CartActionTypes, CartContextType, CartItem } from "./CartTypes";
 import { cartReducer } from "./CartReducer";
+import { useProduct } from "../product/ProductContext"; 
 
-// 🔹 Initial State
 const initialState: CartState = {
   cart: [],
   totalAmount: 0,
 };
 
-// 🔹 Create Context
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const { products } = useProduct(); // ✅ Get latest products from ProductContext
 
-  // 🔹 Fetch Cart from Local Storage (on mount)
+  // ✅ Sync Cart when Products Update (Includes Deletions)
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      dispatch({ type: CartActionTypes.LOAD_CART, payload: JSON.parse(storedCart) });
-    }
-  }, []);
+    dispatch({ type: CartActionTypes.UPDATE_PRODUCTS_IN_CART, payload: products });
+  }, [products]);
 
-  // 🔹 Save Cart to Local Storage (on state change)
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(state.cart));
-  }, [state.cart]);
-
-  // ✅ Add Product to Cart
   const addToCart = (product: CartItem) => {
     dispatch({ type: CartActionTypes.ADD_TO_CART, payload: product });
   };
 
-  // ✅ Remove Product from Cart
   const removeFromCart = (productId: string) => {
     dispatch({ type: CartActionTypes.REMOVE_FROM_CART, payload: productId });
   };
 
-  // ✅ Increase Quantity
   const incrementQuantity = (productId: string) => {
     dispatch({ type: CartActionTypes.INCREMENT_QUANTITY, payload: productId });
   };
 
-  // ✅ Decrease Quantity
   const decrementQuantity = (productId: string) => {
     dispatch({ type: CartActionTypes.DECREMENT_QUANTITY, payload: productId });
   };
 
-  // ✅ Clear Entire Cart
   const clearCart = () => {
     dispatch({ type: CartActionTypes.CLEAR_CART });
   };
 
-  // ✅ Listen for Product Updates & Sync Cart
-  useEffect(() => {
-    const syncCartWithProducts = () => {
-      const products = JSON.parse(localStorage.getItem("products") || "[]");
-      const updatedCart = state.cart
-        .map((cartItem) => {
-          const matchingProduct = products.find((p: CartItem) => p.id === cartItem.id);
-          return matchingProduct ? { ...cartItem, ...matchingProduct } : null;
-        })
-        .filter(Boolean); // Remove deleted products
-
-      dispatch({ type: CartActionTypes.LOAD_CART, payload: updatedCart });
-    };
-
-    window.addEventListener("storage", syncCartWithProducts);
-    return () => window.removeEventListener("storage", syncCartWithProducts);
-  }, [state.cart]);
+  const deleteProductFromCart = (productId: string) => {
+    dispatch({ type: CartActionTypes.DELETE_PRODUCT, payload: productId });
+  };
 
   return (
     <CartContext.Provider
-      value={{ state, addToCart, removeFromCart, incrementQuantity, decrementQuantity, clearCart }}
+      value={{
+        state,
+        addToCart,
+        removeFromCart,
+        incrementQuantity,
+        decrementQuantity,
+        clearCart,
+        deleteProductFromCart,
+      }}
     >
       {children}
     </CartContext.Provider>
   );
 };
 
-// 🔹 Custom Hook for Easy Access
 export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (!context) {
