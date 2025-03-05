@@ -1,0 +1,81 @@
+.tableContainer {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  background-color: var(--card-background);
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.scrollableTable :global(.ant-table-body) {
+  &::-webkit-scrollbar {
+    width: 0px !important;
+    height: 0px !important;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--background-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 4px;
+
+    &:hover {
+      background-color: var(--primary-color);
+    }
+  }
+}
+
+
+.tableTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.tableActions {
+  display: flex;
+  gap: 12px;
+}
+
+.scrollableTable {
+  :global(.ant-table-container) {
+    border-radius: 0;
+  }
+
+  :global(.ant-table-body) {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  :global(.ant-table-thead) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+}
+
+.actionColumn {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.searchInput {
+  width: 250px;
+  transition: width 0.3s ease;
+  
+  &:focus {
+    width: 300px;
+  }
+}

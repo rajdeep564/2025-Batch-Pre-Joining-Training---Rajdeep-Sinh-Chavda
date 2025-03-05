@@ -1,0 +1,26 @@
+.productView {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.value {
+  font-size: 16px;
+  color: var(--text-color);
+}
+
+.description {
+  white-space: pre-line;
+}

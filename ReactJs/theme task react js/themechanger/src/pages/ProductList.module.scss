@@ -1,0 +1,14 @@
+.container {
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .addButton {
+    margin-bottom: 16px;
+  }
+  
+  .table :global(.ant-table-body) {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  

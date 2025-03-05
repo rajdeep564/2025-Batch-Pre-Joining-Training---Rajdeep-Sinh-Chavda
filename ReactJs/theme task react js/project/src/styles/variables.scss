@@ -1,0 +1,41 @@
+:root {
+  // Light theme variables - Clean minimal palette
+  --primary-color: #c04af7;
+  --secondary-color: #6c757d;
+  --background-color: #f8f9fa;
+  --card-background: #ffffff;
+  --text-color: #212529;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --error-color: #dc3545;
+  --header-background: #ffffff;
+  --footer-background: #f8f9fa;
+  --table-header-bg: #f8f9fa;
+  --table-row-hover: #f1f3f5;
+  --shadow-color: rgba(0, 0, 0, 0.05);
+  --accent-color: #6610f2;
+  --button-hover : #d782ff;
+}
+
+[data-theme='dark'] {
+  // Dark theme variables - Clean minimal dark palette
+  --primary-color: #c04af7;
+  --secondary-color: #adb5bd;
+  --background-color: #212529;
+  --card-background: #343a40;
+  --text-color: #f8f9fa;
+  --text-secondary: #adb5bd;
+  --border-color: #495057;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --error-color: #dc3545;
+  --header-background: #343a40;
+  --footer-background: #212529;
+  --table-header-bg: #343a40;
+  --table-row-hover: #495057;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --accent-color: #6f42c1;
+  --button-hover : #d782ff;
+}

@@ -1,0 +1,252 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin",
+      "email": "admin@example.com",
+      "password": "$2b$10$Wkrig87A7YtiQzr6GhD0xerV5tJZ4BzT.mrLJ5.fnr3/ZKlNTD92y",
+      "roleId": "1"
+    },
+    {
+      "id": "2",
+      "name": "HR User",
+      "email": "hr@example.com",
+      "password": "$2a$10$S9TO5tZFjach3tSiztl3P.bIHIzhhJJo6p/lpq.RTRVJkcSXsMHda",
+      "roleId": "2"
+    },
+    {
+      "id": "3",
+      "name": "Supervisor User",
+      "email": "supervisor@example.com",
+      "password": "$2a$10$S9TO5tZFjach3tSiztl3P.bIHIzhhJJo6p/lpq.RTRVJkcSXsMHda",
+      "roleId": "3"
+    },
+    {
+      "id": "4",
+      "name": "Manager User",
+      "email": "manager@example.com",
+      "password": "$2a$10$S9TO5tZFjach3tSiztl3P.bIHIzhhJJo6p/lpq.RTRVJkcSXsMHda",
+      "roleId": "4"
+    },
+    {
+      "id": "df3b",
+      "name": "rajdeep singh",
+      "email": "rajdeepsinghchavda7@gmail.com",
+      "password": "$2a$10$MoYfLMOD4pZyIxMw5D0bhuZS9pc1LPEaa5/jAclDIUn.riLmNP0xe",
+      "roleId": "4"
+    },
+    {
+      "id": "1740987298476",
+      "name": "Dale Pacheco",
+      "email": "gijavoda@mailinator.com",
+      "roleId": "3",
+      "password": "$2a$10$d4u4.XGq8oCsYkMyYe6O7.4oNrd7BR2S1SAoemWH/aHl.XeG5ZKXe"
+    }
+  ],
+  "roles": [
+    {
+      "id": "1",
+      "name": "Admin"
+    },
+    {
+      "id": "2",
+      "name": "HR"
+    },
+    {
+      "id": "3",
+      "name": "Supervisor"
+    },
+    {
+      "id": "4",
+      "name": "Manager"
+    },
+    {
+      "id": "caba",
+      "name": "rajdeep"
+    }
+  ],
+  "permissions": [
+    {
+      "id": "1",
+      "roleId": 1,
+      "module": "users",
+      "view": true,
+      "add": true,
+      "edit": true,
+      "delete": true
+    },
+    {
+      "id": "2",
+      "roleId": 1,
+      "module": "employees",
+      "view": true,
+      "add": true,
+      "edit": true,
+      "delete": true
+    },
+    {
+      "id": "3",
+      "roleId": 1,
+      "module": "projects",
+      "view": true,
+      "add": true,
+      "edit": true,
+      "delete": true
+    },
+    {
+      "id": "4",
+      "roleId": 1,
+      "module": "roles",
+      "view": true,
+      "add": true,
+      "edit": true,
+      "delete": true
+    },
+    {
+      "id": "5",
+      "roleId": 2,
+      "module": "users",
+      "view": true,
+      "add": true,
+      "edit": true,
+      "delete": true
+    },
+    {
+      "id": "6",
+      "roleId": 2,
+      "module": "employees",
+      "view": true,
+      "add": true,
+      "edit": true,
+      "delete": true
+    },
+    {
+      "id": "7",
+      "roleId": 2,
+      "module": "projects",
+      "view": true,
+      "add": false,
+      "edit": false,
+      "delete": false
+    },
+    {
+      "id": "8",
+      "roleId": 2,
+      "module": "roles",
+      "view": true,
+      "add": false,
+      "edit": false,
+      "delete": false
+    },
+    {
+      "id": "9",
+      "roleId": 3,
+      "module": "users",
+      "view": true,
+      "add": false,
+      "edit": false,
+      "delete": false
+    },
+    {
+      "id": "10",
+      "roleId": 3,
+      "module": "employees",
+      "view": true,
+      "add": false,
+      "edit": true,
+      "delete": false
+    },
+    {
+      "id": "11",
+      "roleId": 3,
+      "module": "projects",
+      "view": true,
+      "add": false,
+      "edit": false,
+      "delete": false
+    },
+    {
+      "id": "12",
+      "roleId": 3,
+      "module": "roles",
+      "view": true,
+      "add": false,
+      "edit": false,
+      "delete": false
+    },
+    {
+      "id": "13",
+      "roleId": 4,
+      "module": "users",
+      "view": true,
+      "add": false,
+      "edit": false,
+      "delete": false
+    },
+    {
+      "id": "14",
+      "roleId": 4,
+      "module": "employees",
+      "view": true,
+      "add": false,
+      "edit": false,
+      "delete": false
+    },
+    {
+      "id": "15",
+      "roleId": 4,
+      "module": "projects",
+      "view": true,
+      "add": true,
+      "edit": true,
+      "delete": true
+    },
+    {
+      "id": "16",
+      "roleId": 4,
+      "module": "roles",
+      "view": true,
+      "add": false,
+      "edit": false,
+      "delete": false
+    }
+    
+  ],
+  "employees": [
+    {
+      "id": "1",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "position": "Software Developer",
+      "department": "Engineering",
+      "joinDate": "2023-01-15"
+    },
+    {
+      "id": "2",
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "position": "UI/UX Designer",
+      "department": "Design",
+      "joinDate": "2023-02-20"
+    },
+    {
+      "id": "3",
+      "name": "Michael Johnson",
+      "email": "michael@example.com",
+      "position": "Project Manager",
+      "department": "Management",
+      "joinDate": "2022-11-10"
+    }
+  ],
+  "projects": [
+    {
+      "id": "2",
+      "name": "Mobile App Development",
+      "description": "Develop a mobile app for customer engagement",
+      "startDate": "2023-04-14T18:30:00.000Z",
+      "endDate": "2023-09-29T18:30:00.000Z",
+      "status": "Planning",
+      "manager": "Sarah Williams"
+    }
+  ]
+}
